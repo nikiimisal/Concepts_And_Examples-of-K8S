@@ -6,12 +6,12 @@
 - [Pod](#example-0)
   
  Types of Pods  :
-  - [Pod](#example-1)   - [Replication of Pod](#example-2)    - [ReplicaSet](#example-3)     - [Deployment](#example-4)     - [Static Pod](#example-5)     - [Job](#example-6)   - [CronJob](#example-7)   - [DaemonSet](#example-8)  
+    - [Pod](#example-1) ,   - [Replication of Pod](#example-2) ,   - [ReplicaSet](#example-3) ,     - [Deployment](#example-4)  ,   - [Static Pod](#example-5)  ,   - [Job](#example-6)  , - [CronJob](#example-7) ,  - [DaemonSet](#example-8)  
  
 - [Service](#example-9)
   
-  Types of Kubernetes services  :
-     - [ClusterIP](#example-10)   - [NodePort](#example-11)     - [LoadBalancer](#example-12)    - [ExternalName](#example-13)
+Types of Kubernetes services  :
+     - [ClusterIP](#example-10) ,  - [NodePort](#example-11) ,    - [LoadBalancer](#example-12)  ,  - [ExternalName](#example-13)
   
 
 
