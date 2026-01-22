@@ -42,6 +42,12 @@ Pod = Wrapper around container(s)
 
 ## There Are 8 Types of Pods
 
+
+<p align="center">
+  <img src="https://github.com/nikiimisal/Kubernetes_-K8s-_Info-and-Setup/blob/main/img/types%20of%20pod.png?raw=true" width="500" alt="Initialize Repository Screenshot">
+</p>
+
+
 ###  1️⃣ Pod 
 
 Pod Creation – Manifest File 
@@ -233,6 +239,13 @@ Why do we need a Service?
 
 
 ##  Types of Kubernetes Services (Main 4 Types) ✅
+
+
+
+<p align="center">
+  <img src="https://github.com/nikiimisal/Kubernetes_-K8s-_Info-and-Setup/blob/main/img/kub%20services.png?raw=true" width="500" alt="Initialize Repository Screenshot">
+</p>
+
 
 ###  1️⃣ ClusterIP (Default)
 
