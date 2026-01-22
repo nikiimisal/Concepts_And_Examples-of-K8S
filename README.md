@@ -4,8 +4,15 @@
 ---
 
 - [Pod](#example-0)
-  -  
-
+  
+ Types of Pods  :
+  - [Pod](#example-1)   - [Replication of Pod](#example-2)    - [ReplicaSet](#example-3)     - [Deployment](#example-4)     - [Static Pod](#example-5)     - [Job](#example-6)   - [CronJob](#example-7)   - [DaemonSet](#example-8)  
+ 
+- [Service](#example-9)
+  
+  Types of Kubernetes services  :
+     - [ClusterIP](#example-10)   - [NodePort](#example-11)     - [LoadBalancer](#example-12)    - [ExternalName](#example-13)
+  
 
 
 
@@ -47,6 +54,9 @@ Pod = Wrapper around container(s)
   <img src="https://github.com/nikiimisal/Kubernetes_-K8s-_Info-and-Setup/blob/main/img/types%20of%20pod.png?raw=true" width="500" alt="Initialize Repository Screenshot">
 </p>
 
+
+
+<a id="example-1"></a>
 
 ###  1️⃣ Pod 
 
@@ -106,6 +116,10 @@ Running a single Nginx container
 ---
 
 
+
+<a id="example-2"></a>
+
+
 ###  2️⃣ Replication of Pod
 
 
@@ -119,6 +133,10 @@ Running a single Nginx container
 
 ---
 
+
+<a id="example-3"></a>
+
+
 ###  3️⃣ ReplicaSet
 
 - Ensures a fixed number of Pods are always running
@@ -128,6 +146,11 @@ Example:<br>
 Maintain exactly 3 Pods at all times
 
 ---
+
+
+
+<a id="example-4"></a>
+
 
 ###  4️⃣ Deployment
 
@@ -146,6 +169,9 @@ Updating application from v1 to v2 without downtime
 
 ---
 
+
+
+<a id="example-5"></a>
 
 
 ###   5️⃣ Static Pod
@@ -179,6 +205,11 @@ Examples of Static Pods :
 
 ---
 
+
+
+<a id="example-6"></a>
+
+
 ###  6️⃣ Job 
 
 
@@ -191,6 +222,10 @@ Example:
 - One-time data processing  
 
 ---
+
+
+<a id="example-7"></a>
+
 
 ###  7️⃣ CronJob
 
@@ -206,6 +241,11 @@ Example:
 ---
 
 
+
+<a id="example-8"></a>
+
+
+
 ###   8️⃣ DaemonSet
 
 - Ensures one Pod runs on every node ( monetering pod )
@@ -219,6 +259,10 @@ Example:
 
 ---
 ---
+
+
+
+<a id="example-9"></a>
 
 
 #  Service
@@ -247,6 +291,10 @@ Why do we need a Service?
 </p>
 
 
+
+<a id="example-10"></a>
+
+
 ###  1️⃣ ClusterIP (Default)
 
 
@@ -259,6 +307,11 @@ Why do we need a Service?
 - Database service
 
 ---
+
+
+
+<a id="example-11"></a>
+
 
 ###  2️⃣ NodePort
 
@@ -273,6 +326,10 @@ Why do we need a Service?
 - Dev environments
 
 ---
+
+
+<a id="example-12"></a>
+
 
 ###   3️⃣ LoadBalancer
 
