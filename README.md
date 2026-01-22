@@ -1,5 +1,5 @@
 
-<h1 align="center">ConceptsAnd Examples of K8S</h1>
+<h1 align="center">Concepts And Examples of K8S</h1>
 
 ---
 
@@ -14,6 +14,7 @@ Types of Kubernetes services  :
      - [ClusterIP](#example-10) ,  - [NodePort](#example-11) ,    - [LoadBalancer](#example-12)  ,  - [ExternalName](#example-13)
   
 
+-  [Ways to create kubernates](#example-14)
 
 
 <br>
@@ -342,6 +343,9 @@ Why do we need a Service?
 
 ---
 
+<a id="example-13"></a>
+
+
 ###  4️⃣ ExternalName
 
 - Maps a Service to an external DNS name
@@ -365,6 +369,9 @@ Why do we need a Service?
 
 ---
 ---
+
+
+<a id="example-14"></a>
 
 #  Ways to create kubernates 
 
