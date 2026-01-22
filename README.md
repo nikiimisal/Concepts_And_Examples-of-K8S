@@ -10,7 +10,7 @@
  
 - [Service](#example-9)
   
-Types of Kubernetes services  :
+Types of Kubernetes services  :<br>
      - [ClusterIP](#example-10) ,  - [NodePort](#example-11) ,    - [LoadBalancer](#example-12)  ,  - [ExternalName](#example-13)
   
 
