@@ -300,6 +300,7 @@ Why do we need a Service?
 
 ### 1️⃣ Minikube
 
+- Contains only one node cluster... that node act as a master as well as worker node 
 - Creates a single-node Kubernetes cluster
 - Runs inside VM or Docker on your laptop
 - Very easy to install and use
@@ -333,6 +334,9 @@ Only for development and testing
 
 ###  3️⃣ kubeadm
 
+- Master & worker node deployment but manually
+- All the infrastructure managed by you .
+- On premices , cloud vm --> deployment 
 - Official Kubernetes tool
 - Used to create real, production-like clusters
 - Supports multi-node (master + workers)
