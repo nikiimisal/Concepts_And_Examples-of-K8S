@@ -372,11 +372,58 @@ kubectl delete svc <service-name>                            # Delete a specific
 kubectl delete svc <service-name> -n <namespace-name>        # Delete Service from a specific namespace
 ```
 
->  🗑️ Delete using YAML file
+>  Apply, Run, Execuite `.YAML` file
 
 ```
-kubectl delete -f filename.yaml
+kubectl apply -f filename.yml
+kubectl delete -f filename.yml   # 🗑️ Delete using YAML file
 ```
+
+##  Screenshots
+
+###   Run through commands
+
+<p align="center">
+  <img src="https://github.com/nikiimisal/Concepts_And_Examples-of-K8S/blob/main/img/Screenshot%202026-01-26%20090542.png?raw=true" width="500" alt="Initialize Repository Screenshot">
+</p>
+
+
+<p align="center">
+  <img src="https://github.com/nikiimisal/Concepts_And_Examples-of-K8S/blob/main/img/Screenshot%202026-01-26%20090636.png?raw=true" width="500" alt="Initialize Repository Screenshot">
+</p>
+
+
+---
+
+-  To see Webpage Add port To node server
+
+  <p align="center">
+  <img src="https://github.com/nikiimisal/Concepts_And_Examples-of-K8S/blob/main/img/Screenshot%202026-01-26%20084841.png?raw=true" width="500" alt="Initialize Repository Screenshot">
+</p>
+
+
+<p align="center">
+  <img src="https://github.com/nikiimisal/Concepts_And_Examples-of-K8S/blob/main/img/Screenshot%202026-01-26%20085208.png?raw=true" width="500" alt="Initialize Repository Screenshot">
+</p>
+
+
+
+###   Run through   .yml  files
+
+<p align="center">
+  <img src="https://github.com/nikiimisal/Concepts_And_Examples-of-K8S/blob/main/img/Screenshot%202026-01-26%20090811.png?raw=true" width="500" alt="Initialize Repository Screenshot">
+</p>
+
+
+<p align="center">
+  <img src="https://github.com/nikiimisal/Concepts_And_Examples-of-K8S/blob/main/img/Screenshot%202026-01-26%20090828.png?raw=true" width="500" alt="Initialize Repository Screenshot">
+</p>
+
+
+
+<p align="center">
+  <img src="https://github.com/nikiimisal/Concepts_And_Examples-of-K8S/blob/main/img/Screenshot%202026-01-26%20090435.png?raw=true" width="500" alt="Initialize Repository Screenshot">
+</p>
 
 
 
