@@ -15,6 +15,7 @@ Types of Kubernetes services  :
   
 
 -  [Ways to create kubernates](#example-14)
+-  [Pod & Service Commands , Demo Exammples](#example-15)
 
 
 <br>
@@ -261,11 +262,12 @@ Example:
 ---
 ---
 
-
+<a id="example-15"></a>
 
 #   Example
 
-
+- [too see Screenshots](#example-16)
+  
 A Pod can be created using a command like:
 
 ```
@@ -378,6 +380,9 @@ kubectl delete svc <service-name> -n <namespace-name>        # Delete Service fr
 kubectl apply -f filename.yml
 kubectl delete -f filename.yml   # 🗑️ Delete using YAML file
 ```
+
+<a id="example-16"></a>
+
 
 ##  Screenshots
 
