@@ -383,14 +383,12 @@ kubectl delete -f filename.yml   # 🗑️ Delete using YAML file
 
 ###   Run through commands
 
-<p align="center">
-  <img src="https://github.com/nikiimisal/Concepts_And_Examples-of-K8S/blob/main/img/Screenshot%202026-01-26%20090542.png?raw=true" width="500" alt="Initialize Repository Screenshot">
-</p>
 
 
-<p align="center">
-  <img src="https://github.com/nikiimisal/Concepts_And_Examples-of-K8S/blob/main/img/Screenshot%202026-01-26%20090636.png?raw=true" width="500" alt="Initialize Repository Screenshot">
-</p>
+
+| **Terminal**    | ****          |
+|--------------------------------|------------------------------------|
+| ![VS](https://github.com/nikiimisal/Concepts_And_Examples-of-K8S/blob/main/img/Screenshot%202026-01-26%20090542.png?raw=true) | ![AWS](https://github.com/nikiimisal/Concepts_And_Examples-of-K8S/blob/main/img/Screenshot%202026-01-26%20090636.png?raw=true) | 
 
 
 ---
@@ -410,14 +408,11 @@ kubectl delete -f filename.yml   # 🗑️ Delete using YAML file
 
 ###   Run through   .yml  files
 
-<p align="center">
-  <img src="https://github.com/nikiimisal/Concepts_And_Examples-of-K8S/blob/main/img/Screenshot%202026-01-26%20090811.png?raw=true" width="500" alt="Initialize Repository Screenshot">
-</p>
 
 
-<p align="center">
-  <img src="https://github.com/nikiimisal/Concepts_And_Examples-of-K8S/blob/main/img/Screenshot%202026-01-26%20090828.png?raw=true" width="500" alt="Initialize Repository Screenshot">
-</p>
+| **Terminal**    | ****          |
+|--------------------------------|------------------------------------|
+| ![VS](https://github.com/nikiimisal/Concepts_And_Examples-of-K8S/blob/main/img/Screenshot%202026-01-26%20090811.png?raw=true) | ![AWS](https://github.com/nikiimisal/Concepts_And_Examples-of-K8S/blob/main/img/Screenshot%202026-01-26%20090828.png?raw=true) | 
 
 
 
