@@ -263,6 +263,128 @@ Example:
 
 
 
+#   Example
+
+
+A Pod can be created using a command like:
+
+```
+kubectl run mypod --image=nginx --port=80
+```
+
+###  Problem with this approach:
+
+When you create Pods using commands, it is not reusable. You cannot easily replicate it or apply auto-scaling.
+
+###   Why files (YAML) are better:
+
+If you define the Pod in a YAML file, you can reuse it, replicate Pods easily, and enable auto-scaling, Version control.<br>
+
+###   Limitation of commands:
+
+When using commands, you have to run the same command again and again.
+For example, if you want to create 1000 containers, you would need to execute the command repeatedly, which is not practical.
+
+###  ⚠️ Important Note
+
+- This command creates a single Pod only.
+- It is not reusable and not recommended for production.
+- Auto-scaling and replication are not possible with this method.
+- To create multiple Pods, the command must be executed repeatedly.
+
+
+Pod Commands
+
+```
+kubectl run mypod --image=nginx --port=80 
+```
+
+🔍 Explanation
+- `kubectl run` → Used to create a Pod
+- `mypod` → Name of the Pod
+- `--image=nginx` → Container image used for the Pod
+- `--port=80` → Port exposed by the container (informational)
+  
+```
+
+kubectl run mypod --image=nginx --port=80             # Create A pod using command
+
+kubectl get pods                                      #  To check whether a Pod has been created or not, use the following command
+kubectl get pod
+kubectl get po
+
+kubectl get pods -n <namespace-name>                  #  To view Pods in a specific namespace
+
+
+kubectl describe pod <pod-name>                       # To see detailed information about a Pod
+
+kubectl get pods -o wide                              #  To view Pod status with node and IP details
+
+kubectl logs <pod-name>                                #  To check Pod logs
+
+# Delete Pod:
+kubectl delete pod <pod-name>                           # Delete a specific Pod
+kubectl delete pod <pod-name> -n <namespace-name>       # Delete Pod from a specific namespace
+```
+
+
+
+
+
+
+
+
+
+
+
+Services Commands:
+
+```
+kubectl expose pod mypod --name=mysvc --type=NodePort --port=80 --target-port=80
+```
+🔍 Explanation
+
+- `kubectl expose` → Creates a Service
+- `pod mypod` → Pod you want to expose
+- `--name=mysvc` → Name of the Service
+- `--type=NodePort` → Exposes the Service on a Node port
+- `--port=80` → Service port
+- `--target-port=80` → Container port inside the Pod
+
+```
+kubectl get svc             # check the Service
+kubectl get svc mysvc       # To see the NodePort number
+<NodeIP>:<NodePort>         # You can access the application using
+
+```
+```
+
+kubectl get services                          # To view all Services
+kubectl get svc                               # To view all Services
+
+kubectl get svc -n <namespace-name>           #  To check Services in a specific namespace
+
+kubectl describe service <service-name>       #  To see detailed information about a Service
+
+
+kubectl delete service <service-name>                        # Delete a specific Service
+kubectl delete svc <service-name>                            # Delete a specific Service
+kubectl delete svc <service-name> -n <namespace-name>        # Delete Service from a specific namespace
+```
+
+>  🗑️ Delete using YAML file
+
+```
+kubectl delete -f filename.yaml
+```
+
+
+
+
+
+---
+---
+
 <a id="example-9"></a>
 
 
