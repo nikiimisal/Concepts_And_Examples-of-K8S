@@ -779,7 +779,10 @@ Very complex to manage
 
 
 <p align="center">
-  <img src="" width="500" alt="Initialize Repository Screenshot">
+  <img src="https://github.com/nikiimisal/Concepts_And_Examples-of-K8S/blob/main/img/Screenshot%202026-01-29%20192705.png?raw=true" width="500" alt="Initialize Repository Screenshot">
+</p>
+<p align="center">
+  <img src="https://github.com/nikiimisal/Concepts_And_Examples-of-K8S/blob/main/img/Screenshot%202026-01-29%20192837.png?raw=true" width="500" alt="Initialize Repository Screenshot">
 </p>
 
 - Use this NodePort as the Target Group port.
@@ -790,14 +793,14 @@ Very complex to manage
 Done ✅ Kubernetes Load Balancer is ready.
 
 <p align="center">
-  <img src="" width="500" alt="Initialize Repository Screenshot">
+  <img src="https://github.com/nikiimisal/Concepts_And_Examples-of-K8S/blob/main/img/Screenshot%202026-01-29%20193021.png?raw=true" width="500" alt="Initialize Repository Screenshot">
 </p>
 
 >>Before connecting the Load Balancer to the Pod (or Node), make sure the Pod and Service are running on your master server.
 
 
 <p align="center">
-  <img src="" width="500" alt="Initialize Repository Screenshot">
+  <img src="https://github.com/nikiimisal/Concepts_And_Examples-of-K8S/blob/main/img/Screenshot%202026-01-29%20193901.png?raw=true" width="500" alt="Initialize Repository Screenshot">
 </p>
 
 -  To check the LoadBalancer is sucessfully run copy the LB DNS name and pest to the browser
@@ -805,7 +808,7 @@ Done ✅ Kubernetes Load Balancer is ready.
 
 
 <p align="center">
-  <img src="" width="500" alt="Initialize Repository Screenshot">
+  <img src="https://github.com/nikiimisal/Concepts_And_Examples-of-K8S/blob/main/img/Screenshot%202026-01-29%20194111.png?raw=true" width="500" alt="Initialize Repository Screenshot">
 </p>
 
 
@@ -820,7 +823,7 @@ An error is occurring. See this screenshot.
 
 
 <p align="center">
-  <img src="" width="500" alt="Initialize Repository Screenshot">
+  <img src="https://github.com/nikiimisal/Concepts_And_Examples-of-K8S/blob/main/img/Screenshot%202026-01-29%20201141.png?raw=true" width="500" alt="Initialize Repository Screenshot">
 </p>
 
 - There are 2 temperery steps to follow, as shown in the screenshot.
@@ -830,22 +833,22 @@ An error is occurring. See this screenshot.
 
 | **Terminal**    | ****          |
 |--------------------------------|------------------------------------|
-| ![VS]() | ![AWS]() |
+| ![VS](https://github.com/nikiimisal/Concepts_And_Examples-of-K8S/blob/main/img/Screenshot%202026-01-29%20201716.png?raw=true) | ![AWS](https://github.com/nikiimisal/Concepts_And_Examples-of-K8S/blob/main/img/Screenshot%202026-01-29%20201726.png?raw=true) |
 
 
 <p align="center">
-  <img src="" width="500" alt="Initialize Repository Screenshot">
+  <img src="https://github.com/nikiimisal/Concepts_And_Examples-of-K8S/blob/main/img/Screenshot%202026-01-29%20201044.png?raw=true" width="500" alt="Initialize Repository Screenshot">
 </p>
 
 
 >  note :<br>
 > - This is temporary.<br>
-  - Problem: If the Pod restarts, all changes are lost and it shows the default “Welcome to Nginx” page again.<br>
-  - To make data permanent, use a ConfigMap instead of editing files inside the Pod.
+> - Problem: If the Pod restarts, all changes are lost and it shows the default “Welcome to Nginx” page again.<br>
+> - To make data permanent, use a `ConfigMap` instead of editing files inside the Pod.
 
 
 
-
+---
 
 
 
