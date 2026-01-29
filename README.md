@@ -839,7 +839,7 @@ An error is occurring. See this screenshot.
 
 
 >  note :<br>
-  - This is temporary.<br>
+> - This is temporary.<br>
   - Problem: If the Pod restarts, all changes are lost and it shows the default “Welcome to Nginx” page again.<br>
   - To make data permanent, use a ConfigMap instead of editing files inside the Pod.
 
