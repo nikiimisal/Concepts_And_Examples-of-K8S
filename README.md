@@ -781,12 +781,15 @@ Very complex to manage
 <p align="center">
   <img src="https://github.com/nikiimisal/Concepts_And_Examples-of-K8S/blob/main/img/Screenshot%202026-01-29%20192705.png?raw=true" width="500" alt="Initialize Repository Screenshot">
 </p>
+
+
+- Use this NodePort as the Target Group port.
+- Create the Target Group.
+  
 <p align="center">
   <img src="https://github.com/nikiimisal/Concepts_And_Examples-of-K8S/blob/main/img/Screenshot%202026-01-29%20192837.png?raw=true" width="500" alt="Initialize Repository Screenshot">
 </p>
 
-- Use this NodePort as the Target Group port.
-- Create the Target Group.
 - Go back to the Load Balancer and attach/select this Target Group.
 - Once completed, the Load Balancer for Kubernetes is ready.
 
