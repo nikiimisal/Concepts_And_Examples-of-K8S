@@ -16,6 +16,7 @@ Types of Kubernetes services  :
 
 -  [Ways to create kubernates](#example-14)
 -  [Pod & Service Commands , Demo Exammples](#example-15)
+-  [Service-LoadBalancer](#example-18)
 
 
 <br>
@@ -267,6 +268,7 @@ Example:
 #   Example
 
 - [too see Screenshots](#example-16)
+- [Script](#example-17)
   
 A Pod can be created using a command like:
 
@@ -311,6 +313,8 @@ kubectl run mypod --image=nginx --port=80
 
 kubectl run mypod --image=nginx --port=80             # Create A pod using command
 
+kubectl exec -it <pod-name> -- /bin/bash             # Command to access the Pod shell.
+
 kubectl get pods                                      #  To check whether a Pod has been created or not, use the following command
 kubectl get pod
 kubectl get po
@@ -322,9 +326,19 @@ kubectl describe pod <pod-name>                       # To see detailed informat
 
 kubectl get pods -o wide                              #  To view Pod status with node and IP details
 
+##  On our behalf, Kubernetes creates a file that contains all the required details. To view those details, run this command.
+
+kubectl get pods -o yaml
+kubectl get pods -o json
+
+
 kubectl logs <pod-name>                                #  To check Pod logs
 
 # Delete Pod:
+
+rm -f pod.yml                                           # file is delete but pod  still running
+kubectl delete -f pod.yml 
+
 kubectl delete pod <pod-name>                           # Delete a specific Pod
 kubectl delete pod <pod-name> -n <namespace-name>       # Delete Pod from a specific namespace
 ```
@@ -425,9 +439,96 @@ kubectl delete -f filename.yml   # 🗑️ Delete using YAML file
   <img src="https://github.com/nikiimisal/Concepts_And_Examples-of-K8S/blob/main/img/Screenshot%202026-01-26%20090435.png?raw=true" width="500" alt="Initialize Repository Screenshot">
 </p>
 
+<a id="example-17"></a>
 
+`Pod.yml`
 
+```
+apiVersion: v1
+kind: Pod
+metadata:
+  name: mypod
+  labels:
+    app: mynginx
+spec:
+   containers:
+     - name: mycontainer
+```
+```
+# apiVersion specifies the Kubernetes API version being used
+apiVersion: v1
 
+# kind defines the type of Kubernetes object (here, it is a Pod)
+kind: Pod
+
+# metadata contains information to identify the Pod
+metadata:
+  # name is the unique name of the Pod
+  name: mypod
+
+  # labels are key-value pairs used for grouping and selecting resources
+  labels:
+    # app label helps identify the application running in the Pod
+    app: mynginx
+
+# spec defines the desired state/configuration of the Pod
+spec:
+  # containers section defines the containers that run inside the Pod
+  containers:
+    # name is the name of the container inside the Pod
+    - name: mycontainer
+```
+
+`service.yml`
+
+```
+apiVersion: v1
+kind: Service
+metadata:
+  name: mysvc
+spec:
+  selector:
+    app: mynginx
+  type: NodePort
+  ports:
+    - protocol: TCP
+      port: 80 # service port
+      targetPort: 80 # pod port
+```
+```
+# apiVersion specifies the Kubernetes API version
+apiVersion: v1
+
+# kind defines the Kubernetes resource type (Service)
+kind: Service
+
+# metadata contains identifying information about the Service
+metadata:
+  # name is the unique name of the Service
+  name: mysvc
+
+# spec defines the desired configuration of the Service
+spec:
+  # selector connects the Service to Pods with matching labels
+  selector:
+    # this Service will route traffic to Pods labeled app: mynginx
+    app: mynginx
+
+  # type defines how the Service is exposed
+  # NodePort exposes the Service on a static port on each node
+  type: NodePort
+
+  # ports defines how traffic is mapped
+  ports:
+    # protocol used for communication
+    - protocol: TCP
+
+      # port is the port exposed by the Service inside the cluster
+      port: 80 # service port
+
+      # targetPort is the port on which the container listens
+      targetPort: 80 # pod port
+```
 
 ---
 ---
@@ -649,6 +750,145 @@ Very complex to manage
 
 
 ---
+---
+
+
+<a id="example-18"></a>
+
+
+#   Service - Loadbalancer
+
+#  Quick Overview: Using Load Balancer Service (AWS)
+
+- We are going to use a Load Balancer Service.
+- Open the AWS Console and go to Load Balancers.
+- Click on Application Load Balancer.
+- Give the Load Balancer a name.
+- Select Scheme: Internet-facing (because the application should be publicly accessible).
+- Select the default VPC.
+- Choose the same security group that is attached to the Kubernetes master and worker nodes.
+- Click Next and create a Target Group.
+- While creating the Target Group, you must provide a Node port number because traffic will be forwarded through this port to node  -> service -> pod.
+- To find the port:
+   - Access the Kubernetes master terminal,There you will see node port ip.
+   - Run:
+  ```
+  kubectl get svc
+  ```
+  -  Note the NodePort shown there.
+
+
+<p align="center">
+  <img src="" width="500" alt="Initialize Repository Screenshot">
+</p>
+
+- Use this NodePort as the Target Group port.
+- Create the Target Group.
+- Go back to the Load Balancer and attach/select this Target Group.
+- Once completed, the Load Balancer for Kubernetes is ready.
+
+Done ✅ Kubernetes Load Balancer is ready.
+
+<p align="center">
+  <img src="" width="500" alt="Initialize Repository Screenshot">
+</p>
+
+>>Before connecting the Load Balancer to the Pod (or Node), make sure the Pod and Service are running on your master server.
+
+
+<p align="center">
+  <img src="" width="500" alt="Initialize Repository Screenshot">
+</p>
+
+-  To check the LoadBalancer is sucessfully run copy the LB DNS name and pest to the browser
+
+
+
+<p align="center">
+  <img src="" width="500" alt="Initialize Repository Screenshot">
+</p>
+
+
+---
+
+- If we want to change the content inside a Pod, we need to enter the Pod.
+- The file must be edited from inside the Pod.
+- Package managers are usually not installed inside the Pod.
+- Because of this, editing files directly inside the Pod is not easy.
+
+An error is occurring. See this screenshot.
+
+
+<p align="center">
+  <img src="" width="500" alt="Initialize Repository Screenshot">
+</p>
+
+- There are 2 temperery steps to follow, as shown in the screenshot.
+
+
+
+
+| **Terminal**    | ****          |
+|--------------------------------|------------------------------------|
+| ![VS]() | ![AWS]() |
+
+
+<p align="center">
+  <img src="" width="500" alt="Initialize Repository Screenshot">
+</p>
+
+
+>  note :<br>
+  - This is temporary.<br>
+  - Problem: If the Pod restarts, all changes are lost and it shows the default “Welcome to Nginx” page again.<br>
+  - To make data permanent, use a ConfigMap instead of editing files inside the Pod.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
