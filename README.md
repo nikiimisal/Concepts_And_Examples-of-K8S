@@ -1183,11 +1183,11 @@ spec:
 
 | **Terminal**    | ****          |
 |--------------------------------|------------------------------------|
-| ![VS]() | ![AWS]) |
+| ![VS](https://github.com/nikiimisal/Concepts_And_Examples-of-K8S/blob/main/img/Screenshot%202026-01-30%20153449.png?raw=true) | ![AWS](https://github.com/nikiimisal/Concepts_And_Examples-of-K8S/blob/main/img/Screenshot%202026-01-30%20153500.png?raw=true) |
 
 
 <p align="center">
-  <img src="" width="500" alt="Initialize Repository Screenshot">
+  <img src="https://github.com/nikiimisal/Concepts_And_Examples-of-K8S/blob/main/img/Screenshot%202026-01-30%20153526.png?raw=true" width="500" alt="Initialize Repository Screenshot">
 </p>
 
 
@@ -1199,13 +1199,13 @@ spec:
 
 
 <p align="center">
-  <img src="" width="500" alt="Initialize Repository Screenshot">
+  <img src="https://github.com/nikiimisal/Concepts_And_Examples-of-K8S/blob/main/img/Screenshot%202026-01-30%20153604.png?raw=true" width="500" alt="Initialize Repository Screenshot">
 </p
 
 
 
 <p align="center">
-  <img src="" width="500" alt="Initialize Repository Screenshot">
+  <img src="https://github.com/nikiimisal/Concepts_And_Examples-of-K8S/blob/main/img/Screenshot%202026-01-30%20153845.png?raw=true" width="500" alt="Initialize Repository Screenshot">
 </p
 
 
