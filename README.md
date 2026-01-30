@@ -1200,13 +1200,13 @@ spec:
 
 <p align="center">
   <img src="https://github.com/nikiimisal/Concepts_And_Examples-of-K8S/blob/main/img/Screenshot%202026-01-30%20153604.png?raw=true" width="500" alt="Initialize Repository Screenshot">
-</p
+</p>
 
 
 
 <p align="center">
   <img src="https://github.com/nikiimisal/Concepts_And_Examples-of-K8S/blob/main/img/Screenshot%202026-01-30%20153845.png?raw=true" width="500" alt="Initialize Repository Screenshot">
-</p
+</p>
 
 
 
