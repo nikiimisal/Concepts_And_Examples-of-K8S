@@ -18,6 +18,7 @@ Types of Kubernetes services  :
 -  [Pod & Service Commands , Demo Exammples](#example-15)
 -  [Service-LoadBalancer](#example-18)
 -  [Detail Replication controller & Replica set pod](#example-20)
+-  [Detail Deployment set](#example-22)
 
 
 <br>
@@ -337,7 +338,15 @@ kubectl logs <pod-name>                                #  To check Pod logs
 kubectl get pods --show-labels                         #  To show labels with pods
 kubectl get rc myrc                                    # This command is used to get detailed information    # about a specific ReplicationController named "myrc"
 kubectl scale rc myrc --replicas=6                     # This command is used to scale the ReplicationController   # It changes the number of Pod replicas to 6
-kubectl scale rc myrc --replicas=15 && kubectl get rc myrc --watch       # This command scales the ReplicationController "myrc" to 15 replicas and then continuously watches its status in real time                      
+kubectl scale rc myrc --replicas=15 && kubectl get rc myrc --watch       # This command scales the ReplicationController "myrc" to 15 replicas and then continuously watches its status in real time
+kubectl delete rc myrc                                 # Delete the rc
+
+kubectl rollout history deployment mydeployment                     # This command shows rollout history of a deployment
+kubectl rollout history deployment mydeployment --revision=2        # shows details of revision 2 of the deployment
+kubectl rollout undo deployment mydeployment                        # rolls back the deployment to the previous revision
+kubectl rollout undo deployment mydeployment --to-revision=2        # rolls back the deployment to a specific revision (2)
+kubectl set image deployment mydeployment nginx=nginx:1.25 --record   # updates the container image and records the change in history
+                    
 
 
 # Delete Pod:
@@ -1214,18 +1223,90 @@ spec:
 ---
 ---
 
+<a id="example-22"></a>
 
 
+#  Deployment Set
+
+[Example or say practicess Schreenshots](#example-21)
 
 
+### What is it?
+- Deployment is a modern and most commonly used Kubernetes controller.
+- Its main job is to manage Pods using ReplicaSets.
+- It ensures the desired number of Pod replicas are always running.
+- Provides rolling updates and rollback support.
+- If a Pod crashes or is deleted, the Deployment automatically recreates it.
+- Uses ReplicaSet internally to manage Pods.
+- Recommended controller for production workloads.
+  
+---
+
+### How it works
+- You define:
+  - Number of replicas
+  - Pod template
+  - Label selector
+  - Update strategy(RollingUpdate / Recreate)
+
+- Kubernetes continuously monitors the cluster:
+  - Deployment creates a ReplicaSet
+  - ReplicaSet creates and manages Pods
+  - If a Pod fails → ReplicaSet recreates it
+  - Deployment monitors ReplicaSet health and status
+
+---
+
+### Update behavior (Rolling Updates)
+
+- Supports rolling updates by default
+- Pods are updated gradually, not all at once
+- Ensures zero or minimal downtime
+- Old Pods are terminated only after new Pods become ready
+  
+---
+
+###  Rollback support
+
+- Deployment keeps revision history
+- You can easily rollback to a previous version
+- Useful when a new release causes issues
+  
+---
+
+### Selector behavior
+
+- Uses ReplicaSet selectors
+- Supports:
+   - Equality-based selectors
+   - Condition-based selectors (`In`,` NotIn`, `Exists`)
+- Much more flexible than ReplicationController
+
+---
+
+###  Pod behavior
+
+- Pods are managed indirectly through ReplicaSets
+- Scaling is smooth and safe
+- Supports auto-scaling with HPA (Horizontal Pod Autoscaler)
+
+---
+
+###   Advantages
+
+- Rolling updates support
+- Easy rollback to previous versions
+- High availability
+- Best suited for modern, scalable applications
+
+> note: Deployment is the recommended controller for production environments and internally uses ReplicaSet.
 
 
+---
+---
 
 
-
-
-
-
+[Screenshots](#example-21)
 
 
 
