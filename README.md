@@ -17,6 +17,7 @@ Types of Kubernetes services  :
 -  [Ways to create kubernates](#example-14)
 -  [Pod & Service Commands , Demo Exammples](#example-15)
 -  [Service-LoadBalancer](#example-18)
+-  [Detail Replication controller & Replica set pod](#example-20)
 
 
 <br>
@@ -858,6 +859,9 @@ An error is occurring. See this screenshot.
 
 ---
 ---
+
+
+<a id="example-20"></a>
 
 
 #    Detail Replication controller  & Replica set pod 
