@@ -334,6 +334,9 @@ kubectl get pods -o json
 
 kubectl logs <pod-name>                                #  To check Pod logs
 kubectl get pods --show-labels                         #  To show labels with pods
+kubectl get rc myrc                                    # This command is used to get detailed information    # about a specific ReplicationController named "myrc"
+kubectl scale rc myrc --replicas=6                     # This command is used to scale the ReplicationController   # It changes the number of Pod replicas to 6
+kubectl scale rc myrc --replicas=15 && kubectl get rc myrc --watch       # This command scales the ReplicationController "myrc" to 15 replicas and then continuously watches its status in real time                      
 
 
 # Delete Pod:
@@ -859,6 +862,7 @@ An error is occurring. See this screenshot.
 
 #    Detail Replication controller  & Replica set pod 
 
+  [Example or say practicess Schreenshots](#example-19)
 
 ###  Why we need ReplicationController / ReplicaSet (before comparing)
 
@@ -1018,8 +1022,280 @@ ReplicaSet
 - Deployment → Best practice (uses ReplicaSet internally)
 
 ---
+---
+
+
+
+Replication controller file `myrc.yml`
+```
+apiVersion: v1
+kind: ReplicationController
+metadata:
+  name: myrc
+spec:
+  replicas: 3
+  selector:
+    app: myapp
+  template:
+    metadata:
+      name: myapp
+      labels:
+        app: myapp
+    spec:
+      containers:
+        - name: mycontainer
+          image: nginx
+          ports:
+            - containerPort: 80
+```
+
+
+```yaml
+# ReplicationController configuration file
+# Note: ReplicationController does NOT support condition-based selectors
+
+apiVersion: v1
+# Specifies the Kubernetes API version
+
+kind: ReplicationController
+# Defines the resource type as ReplicationController
+
+metadata:
+  name: myrc
+  # Name of the ReplicationController
+
+spec:
+  replicas: 3
+  # Specifies how many Pod replicas should be running
+
+  selector:
+    app: myapp
+    # The selector helps the ReplicationController
+    # identify and manage Pods based on labels
+    # (only equality-based selection is supported)
+
+  template:
+    # Pod template used to create new Pods
+    metadata:
+      name: myapp
+      labels:
+        app: myapp
+        # Labels applied to Pods created by this controller
+
+    spec:
+      containers:
+        - name: mycontainer
+          # Name of the container inside the Pod
+
+          image: nginx
+          # Container image to be used
+
+          ports:
+            - containerPort: 80
+            # Port exposed by the container
+```
+
+replica set file `myrc.yml`
+
+```
+## Replication set file -> It does supports the conditions
+apiVersion: v1
+kind: ReplicaSet
+metadata:
+  name: myrs
+spec:
+  replicas: 3
+  selector: # adopt pods based on conditions
+    matchExpressions:
+      - key: env
+        operator: In
+        values: [dev, test]
+  template: # create a new pod with label (env: test)
+    metadata:
+      labels:
+        env: test
+    spec:
+      containers:
+        - name: mycontainer
+          image: nginx
+```
+
+>⚠️ Important: ReplicaSet uses apiVersion: apps/v1 (not v1)
+
+```yaml
+# ReplicaSet configuration file
+# ReplicaSet supports condition-based selectors
+
+apiVersion: apps/v1
+# Specifies the API version for ReplicaSet
+
+kind: ReplicaSet
+# Defines the Kubernetes resource type as ReplicaSet
+
+metadata:
+  name: myrs
+  # Name of the ReplicaSet
+
+spec:
+  replicas: 3
+  # Number of Pod replicas to maintain
+
+  selector:
+    # Selector is used to adopt Pods based on conditions
+    matchExpressions:
+      - key: env
+        # Label key to match
+
+        operator: In
+        # Condition operator (supports In, NotIn, Exists, DoesNotExist)
+
+        values: [dev, test]
+        # Pods with env=dev or env=test will be managed
+
+  template:
+    # Pod template used to create new Pods
+    metadata:
+      labels:
+        env: test
+        # Label applied to newly created Pods
+
+    spec:
+      containers:
+        - name: mycontainer
+          # Name of the container
+
+          image: nginx
+          # Container image
+```
+
+<a id="example-19"></a>
+
+#  Screenshots
+
+  [Too see Commands](#example-15)
+
+
+###  Replication controller
+
+| **Terminal**    | ****          |
+|--------------------------------|------------------------------------|
+| ![VS]() | ![AWS]) |
+
+
+<p align="center">
+  <img src="" width="500" alt="Initialize Repository Screenshot">
+</p>
+
+
+---
+
+###   Replica set
+
+
+
+
+<p align="center">
+  <img src="" width="500" alt="Initialize Repository Screenshot">
+</p
+
+
+
+<p align="center">
+  <img src="" width="500" alt="Initialize Repository Screenshot">
+</p
+
+
+
+
+---
+---
 
 
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
