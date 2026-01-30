@@ -18,7 +18,7 @@ Types of Kubernetes services  :
 -  [Pod & Service Commands , Demo Exammples](#example-15)
 -  [Service-LoadBalancer](#example-18)
 -  [Detail Replication controller & Replica set pod](#example-20)
--  [Detail Deployment set](#example-22)
+-  [Detail Deployment set pod](#example-22)
 
 
 <br>
@@ -325,6 +325,7 @@ kubectl get pods -n <namespace-name>                  #  To view Pods in a speci
 
 
 kubectl describe pod <pod-name>                       # To see detailed information about a Pod
+kubectl get all
 
 kubectl get pods -o wide                              #  To view Pod status with node and IP details
 
@@ -346,6 +347,7 @@ kubectl rollout history deployment mydeployment --revision=2        # shows deta
 kubectl rollout undo deployment mydeployment                        # rolls back the deployment to the previous revision
 kubectl rollout undo deployment mydeployment --to-revision=2        # rolls back the deployment to a specific revision (2)
 kubectl set image deployment mydeployment nginx=nginx:1.25 --record   # updates the container image and records the change in history
+kubectl rollout --help
                     
 
 
@@ -1302,12 +1304,87 @@ spec:
 > note: Deployment is the recommended controller for production environments and internally uses ReplicaSet.
 
 
+Deployment set script `deploy.yml`
+
+```
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mydeploy
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: myapp
+  template:
+    metadata:
+      labels:
+        app: myapp
+    spec:
+      containers:
+      - name: mycontainer
+        image: nginx
+        ports:
+        - containerPort: 80
+```
+```
+# API version used for Deployment
+apiVersion: apps/v1
+
+# Defines the Kubernetes resource type
+kind: Deployment
+
+# Metadata contains basic information about the Deployment
+metadata:
+  # Name of the Deployment
+  name: mydeploy
+
+spec:
+  # Number of Pod replicas to maintain
+  replicas: 3
+
+  # Selector tells Deployment which Pods it should manage
+  selector:
+    matchLabels:
+      # Deployment will manage Pods with this label
+      app: myapp
+
+  # Template is used to create new Pods
+  template:
+    metadata:
+      # Labels applied to Pods created by this Deployment
+      labels:
+        app: myapp
+
+    spec:
+      # List of containers inside the Pod
+      containers:
+      - name: mycontainer
+        # Name of the container
+
+        image: nginx
+        # Container image to run
+
+        ports:
+        - containerPort: 80
+          # Port exposed by the container
+
+```
+
+
+
+
+
+
+
+
 ---
 ---
 
 
-[Screenshots](#example-21)
+<a id="example-21"></a>
 
+#  Screenshots
 
 
 
