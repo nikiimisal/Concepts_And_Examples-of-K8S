@@ -1397,7 +1397,7 @@ spec:
 
 | **Terminal**    | ****          |
 |--------------------------------|------------------------------------|
-| ![VS]() | ![AWS]() |
+| ![VS](https://github.com/nikiimisal/Concepts_And_Examples-of-K8S/blob/main/img/Screenshot%202026-02-01%20144651.png?raw=true) | ![AWS](https://github.com/nikiimisal/Concepts_And_Examples-of-K8S/blob/main/img/Screenshot%202026-02-01%20144733.png?raw=true) |
 
 
 - After modifying the image from nginx to httpd in the same deployment file and reapplying it, the deployment was updated to use the httpd image.
@@ -1405,14 +1405,14 @@ spec:
 
 | **Terminal**    | ****          |
 |--------------------------------|------------------------------------|
-| ![VS]() | ![AWS]() |
+| ![VS](https://github.com/nikiimisal/Concepts_And_Examples-of-K8S/blob/main/img/Screenshot%202026-02-01%20144859.png?raw=true) | ![AWS](https://github.com/nikiimisal/Concepts_And_Examples-of-K8S/blob/main/img/Screenshot%202026-02-01%20144826.png?raw=true) |
 
 
 -  If we want to check the rollout history
 -  Additionally, to monitor how the deployment process is progressing
 
 <p align="center">
-  <img src="" width="500" alt="Initialize Repository Screenshot">
+  <img src="https://github.com/nikiimisal/Concepts_And_Examples-of-K8S/blob/main/img/Screenshot%202026-02-01%20144955.png?raw=true" width="500" alt="Initialize Repository Screenshot">
 </p>
 
 
