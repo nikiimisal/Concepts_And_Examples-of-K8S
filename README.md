@@ -1446,9 +1446,7 @@ spec:
 
 
 
----
----
----
+
 
 <a id="example-23"></a>
 
@@ -1656,23 +1654,191 @@ exec:
 ---
 ---
 
+1️⃣ Liveness Probe `helthcheker.yml`
 
+```yaml
+# API version used for Deployment
+apiVersion: apps/v1
+
+# Defines the Kubernetes object type
+kind: Deployment
+
+# Metadata for the Deployment
+metadata:
+  # Name of the Deployment
+  name: mydeploy
+
+spec:
+  # Number of Pod replicas to run
+  replicas: 3
+
+  # Selector to identify Pods managed by this Deployment
+  selector:
+    matchLabels:
+      app: myapp
+
+  # Pod template used to create Pods
+  template:
+    metadata:
+      # Labels applied to Pods
+      labels:
+        app: myapp
+
+    spec:
+      # Container specification
+      containers:
+      - name: mycontainer
+        # Name of the container
+
+        image: nginx
+        # Container image
+
+        ports:
+        - containerPort: 80
+          # Port exposed by the container
+
+        # Liveness probe checks if the container is alive
+        livenessProbe:
+          httpGet:
+            # Kubernetes sends an HTTP GET request
+            path: /index.html
+            # URL path to check inside the container
+            port: 80
+            # Port on which the application is running
+
+          initialDelaySeconds: 5
+          # Waits 5 seconds after container starts before first check
+
+          periodSeconds: 5
+          # Performs the check every 5 seconds
+
+          timeoutSeconds: 2
+          # Probe fails if no response within 2 seconds
+
+          failureThreshold: 3
+          # After 3 consecutive failures, container is restarted
+```
+
+2️⃣ Readiness Probe  `helthcheker.yml`
+
+```yaml
+# API version used for Deployment
+apiVersion: apps/v1
+
+# Defines the Kubernetes object type
+kind: Deployment
+
+# Metadata for the Deployment
+metadata:
+  name: mydeploy
+  # Name of the Deployment
+
+spec:
+  replicas: 3
+  # Number of Pod replicas
+
+  selector:
+    matchLabels:
+      app: myapp
+      # Deployment will manage Pods with this label
+
+  template:
+    metadata:
+      labels:
+        app: myapp
+        # Labels assigned to Pods
+
+    spec:
+      containers:
+      - name: mycontainer
+        # Container name
+
+        image: nginx
+        # Container image
+
+        ports:
+        - containerPort: 80
+          # Port exposed by the container
+
+        # ---------------- LIVENESS PROBE ----------------
+        livenessProbe:
+          httpGet:
+            path: /index.html
+            # Path used to check if container is alive
+            port: 80
+            # Port used for liveness check
+
+          initialDelaySeconds: 5
+          # Wait 5 seconds before starting liveness checks
+
+          periodSeconds: 5
+          # Check every 5 seconds
+
+          timeoutSeconds: 2
+          # Fail if no response in 2 seconds
+
+          failureThreshold: 3
+          # Restart container after 3 consecutive failures
+
+        # ---------------- READINESS PROBE ----------------
+        readinessProbe:
+          httpGet:
+            path: /login.html
+            # Path used to check if container is ready to receive traffic
+            port: 80
+            # Port used for readiness check
+
+          initialDelaySeconds: 5
+          # Wait 5 seconds before starting readiness checks
+
+          periodSeconds: 5
+          # Check every 5 seconds
+
+          timeoutSeconds: 2
+          # Fail if no response in 2 seconds
+
+          failureThreshold: 3
+          # After 3 failures, Pod is removed from Service (no traffic)
+```
+
+3️⃣ Startup Probe `helthcheker.yml`
+
+```yaml
+
+
+```
+
+
+---
+---
 <a id="example-24"></a>
 
 #  Screenshots
 
+1️⃣ Liveness Probe `helthcheker.yml`
 
 
 
+| **Terminal**    | ****          |
+|--------------------------------|------------------------------------|
+| ![VS]() | ![AWS]() |
 
 
 
+<p align="center">
+  <img src="" width="500" alt="Initialize Repository Screenshot">
+</p>
 
 
+---
 
 
+2️⃣ Readiness Probe  `helthcheker.yml`
 
 
+<p align="center">
+  <img src="" width="500" alt="Initialize Repository Screenshot">
+</p>
 
 
 
