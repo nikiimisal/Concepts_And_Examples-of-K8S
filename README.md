@@ -1821,12 +1821,12 @@ spec:
 
 | **Terminal**    | ****          |
 |--------------------------------|------------------------------------|
-| ![VS]() | ![AWS]() |
+| ![VS](https://github.com/nikiimisal/Concepts_And_Examples-of-K8S/blob/main/img/Screenshot%202026-02-01%20151255.png?raw=true) | ![AWS](https://github.com/nikiimisal/Concepts_And_Examples-of-K8S/blob/main/img/Screenshot%202026-02-01%20151310.png?raw=true) |
 
 
 
 <p align="center">
-  <img src="" width="500" alt="Initialize Repository Screenshot">
+  <img src="https://github.com/nikiimisal/Concepts_And_Examples-of-K8S/blob/main/img/Screenshot%202026-02-01%20152406.png?raw=true" width="500" alt="Initialize Repository Screenshot">
 </p>
 
 
@@ -1837,11 +1837,15 @@ spec:
 
 
 <p align="center">
-  <img src="" width="500" alt="Initialize Repository Screenshot">
+  <img src="https://github.com/nikiimisal/Concepts_And_Examples-of-K8S/blob/main/img/Screenshot%202026-02-01%20152526.png?raw=true" width="500" alt="Initialize Repository Screenshot">
 </p>
 
 
 
+---
+
+
+3️⃣ Startup Probe `helthcheker.yml`
 
 
 
