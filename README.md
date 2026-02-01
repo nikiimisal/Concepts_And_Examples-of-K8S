@@ -1804,7 +1804,109 @@ spec:
 3️⃣ Startup Probe `helthcheker.yml`
 
 ```yaml
+# API version used for Deployment
+apiVersion: apps/v1
 
+# Defines the Kubernetes resource type
+kind: Deployment
+
+# Metadata contains information about the Deployment
+metadata:
+  # Name of the Deployment
+  name: mydeploy
+
+spec:
+  # Number of Pod replicas to maintain
+  replicas: 3
+
+  # Selector defines which Pods are managed by this Deployment
+  selector:
+    matchLabels:
+      app: myapp
+
+  # Pod template used to create Pods
+  template:
+    metadata:
+      # Labels applied to Pods
+      labels:
+        app: myapp
+
+    spec:
+      containers:
+      - name: mycontainer
+        # Name of the container
+
+        image: nginx
+        # Container image to run
+
+        ports:
+        - containerPort: 80
+          # Port exposed by the container
+
+        # Command delays nginx startup by 50 seconds
+        # Used to simulate a slow-starting application
+        command: ["sh", "-c", "sleep 50 && nginx -g 'daemon off;'"]
+
+        # ---------------- STARTUP PROBE ----------------
+        startupProbe:
+          httpGet:
+            path: /index.html
+            # Path checked to confirm application has started
+            port: 80
+            # Port used for startup check
+
+          initialDelaySeconds: 5
+          # Wait 5 seconds before starting startup probe
+
+          periodSeconds: 5
+          # Check every 5 seconds
+
+          timeoutSeconds: 2
+          # Fail if no response within 2 seconds
+
+          failureThreshold: 3
+          # After 3 failures, container is restarted
+          # Until startup probe succeeds,
+          # liveness and readiness probes are disabled
+
+        # ---------------- LIVENESS PROBE ----------------
+        livenessProbe:
+          httpGet:
+            path: /index.html
+            # Path used to check if container is alive
+            port: 80
+
+          initialDelaySeconds: 5
+          # Wait 5 seconds after startup probe succeeds
+
+          periodSeconds: 5
+          # Check every 5 seconds
+
+          timeoutSeconds: 2
+          # Fail if no response within 2 seconds
+
+          failureThreshold: 3
+          # Restart container after 3 consecutive failures
+
+        # ---------------- READINESS PROBE ----------------
+        readinessProbe:
+          httpGet:
+            path: /login.html
+            # Path used to check if application is ready for traffic
+            port: 80
+
+          initialDelaySeconds: 5
+          # Wait 5 seconds before starting readiness checks
+
+          periodSeconds: 5
+          # Check every 5 seconds
+
+          timeoutSeconds: 2
+          # Fail if no response within 2 seconds
+
+          failureThreshold: 3
+          # After 3 failures, Pod is removed from Service
+          # (traffic stops, container is NOT restarted)
 
 ```
 
@@ -1848,12 +1950,18 @@ spec:
 3️⃣ Startup Probe `helthcheker.yml`
 
 
+<p align="center">
+  <img src="https://github.com/nikiimisal/Concepts_And_Examples-of-K8S/blob/main/img/Screenshot%202026-02-01%20185618.png?raw=true" width="500" alt="Initialize Repository Screenshot">
+</p>
 
 
+<p align="center">
+  <img src="https://github.com/nikiimisal/Concepts_And_Examples-of-K8S/blob/main/img/Screenshot%202026-02-01%20185509.png?raw=true" width="500" alt="Initialize Repository Screenshot">
+</p>
 
 
-
-
+---
+---
 
 
 
