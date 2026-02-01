@@ -19,6 +19,10 @@ Types of Kubernetes services  :
 -  [Service-LoadBalancer](#example-18)
 -  [Detail Replication controller & Replica set pod](#example-20)
 -  [Detail Deployment set pod](#example-22)
+-  [HelthChekers](#example-23)  :
+     - [Liveness](#example-23)
+     - [Readiness](#example-23)
+     - [Startup](#example-23)
 
 
 <br>
@@ -1385,6 +1389,284 @@ spec:
 <a id="example-21"></a>
 
 #  Screenshots
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+---
+---
+---
+
+<a id="example-23"></a>
+
+
+<h1>HelthChekers</h1>
+
+[Example or say practicess Schreenshots](#example-24)
+
+###   🔍 What are Health Checkers in Kubernetes?
+
+Health checkers are called Probes.<br>
+They are used by Kubernetes to check the health of a container inside a Pod.
+
+Kubernetes supports 3 types of probes:
+
+1️⃣ Liveness Probe<br>
+2️⃣ Readiness Probe<br>
+3️⃣ Startup Probe
+
+
+---
+
+###  1️⃣ Liveness Probe
+
+👉 What is it?
+
+- Checks whether the container is alive or stuck.
+- If the liveness probe fails:
+   - Kubernetes restarts the container.
+
+👉 Why needed?
+
+- Sometimes an app is running but not responding (deadlock, infinite loop).
+- Liveness probe helps Kubernetes recover automatically.
+
+👉 Example
+
+```yaml
+livenessProbe:
+  httpGet:
+    path: /
+    port: 80
+  initialDelaySeconds: 10
+  periodSeconds: 5
+```
+
+👉 Behavior
+
+- App not responding ❌
+- Probe fails ❌
+- Container restarted 🔄
+
+---
+
+###  2️⃣ Readiness Probe
+
+👉 What is it?
+
+- Checks whether the container is ready to receive traffic.
+- If readiness probe fails:
+   - Pod is removed from Service endpoints
+   - Container is NOT restarted
+
+👉 Why needed?
+
+- App may be running but:
+   - Database not connected
+   - App still loading
+- Prevents traffic from reaching an unready Pod
+
+👉 Example
+
+```yaml
+readinessProbe:
+  httpGet:
+    path: /
+    port: 80
+  initialDelaySeconds: 5
+  periodSeconds: 5
+```
+
+👉 Behavior
+
+- App not ready ❌
+- Traffic stopped 🚫
+- No restart 🔕
+
+
+---
+
+###   3️⃣ Startup Probe
+
+👉 What is it?
+
+- Used for slow-starting applications.
+- Tells Kubernetes:
+
+>Wait until the app fully starts
+
+👉 Why needed?
+
+- Some apps take time (Java, Spring Boot, heavy apps)
+- Without startup probe:
+   - Liveness probe may fail early
+   - Container may restart again and again
+
+👉 Example
+```yaml
+startupProbe:
+  httpGet:
+    path: /
+    port: 80
+  failureThreshold: 30
+  periodSeconds: 10
+```
+👉 Behavior
+
+- Until startup probe succeeds:
+- Liveness & Readiness are disabled
+- Once startup completes
+- Normal probes start working
+
+---
+
+###  Flow chart
+
+```mathematica
+            Pod Created
+                 │
+                 ▼
+        ┌─────────────────┐
+        │  Startup Probe  │
+        └─────────────────┘
+                 │
+        ┌────────┴────────┐
+        │                 │
+   ❌ Fail            ✅ Success
+        │                 │
+ Restart Container     Startup Complete
+                          │
+                          ▼
+        ┌──────────────────────────┐
+        │  Liveness + Readiness    │
+        │        Probes            │
+        └──────────────────────────┘
+             │               │
+             │               │
+     ┌───────┘               └────────┐
+     ▼                                ▼
+Liveness Fail                   Readiness Fail
+(Container Dead)               (Not Ready for Traffic)
+     │                                │
+     ▼                                ▼
+Restart Container            Remove Pod from Service
+                                   (No traffic)
+```
+
+---
+
+###  🧪 Types of Probe Checks
+
+Kubernetes supports 3 probe methods:
+
+1️⃣ HTTP GET
+```yaml
+httpGet:
+  path: /health
+  port: 8080
+```
+
+2️⃣ TCP Socket
+```yaml
+tcpSocket:
+  port: 3306
+```
+
+3️⃣ Exec Command
+```yaml
+exec:
+  command:
+    - cat
+    - /tmp/healthy
+```
+
+---
+
+🔄 Comparison Table
+
+| Probe Type | Purpose            | Restart Container | Traffic Allowed |
+| ---------- | ------------------ | ----------------- | --------------- |
+| Liveness   | Is app alive?      | ✅ Yes             | ✅ Yes           |
+| Readiness  | Ready for traffic? | ❌ No              | ❌ No            |
+| Startup    | Has app started?   | ❌ No              | ❌ No            |
+
+
+---
+
+🧠 Easy to Remember
+
+- Liveness → Restart if app is dead  //  Can app start? //  App loading configs
+- Readiness → Stop traffic if app is not ready  //  Should app be restarted?  //  DB connection ready
+- Startup → Give time to slow apps  //  Should app receive traffic?  //  App health endpoint responding
+
+
+---
+---
+
+
+<a id="example-24"></a>
+
+#  Screenshots
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
