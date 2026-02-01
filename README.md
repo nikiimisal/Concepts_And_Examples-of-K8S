@@ -341,6 +341,8 @@ kubectl get pods -o json
 
 kubectl logs <pod-name>                                #  To check Pod logs
 kubectl get pods --show-labels                         #  To show labels with pods
+kubectl get all                                        # shows all common Kubernetes resources (pods, services, deployments, replicasets, etc.) in the current namespace
+
 kubectl get rc myrc                                    # This command is used to get detailed information    # about a specific ReplicationController named "myrc"
 kubectl scale rc myrc --replicas=6                     # This command is used to scale the ReplicationController   # It changes the number of Pod replicas to 6
 kubectl scale rc myrc --replicas=15 && kubectl get rc myrc --watch       # This command scales the ReplicationController "myrc" to 15 replicas and then continuously watches its status in real time
@@ -1310,7 +1312,7 @@ spec:
 
 Deployment set script `deploy.yml`
 
-```
+```yaml
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -1331,7 +1333,7 @@ spec:
         ports:
         - containerPort: 80
 ```
-```
+```yaml
 # API version used for Deployment
 apiVersion: apps/v1
 
@@ -1391,11 +1393,31 @@ spec:
 #  Screenshots
 
 
+- Write Script and apply Deployment set pod
+
+| **Terminal**    | ****          |
+|--------------------------------|------------------------------------|
+| ![VS]() | ![AWS]() |
 
 
+- After modifying the image from nginx to httpd in the same deployment file and reapplying it, the deployment was updated to use the httpd image.
 
 
+| **Terminal**    | ****          |
+|--------------------------------|------------------------------------|
+| ![VS]() | ![AWS]() |
 
+
+-  If we want to check the rollout history
+-  Additionally, to monitor how the deployment process is progressing
+
+<p align="center">
+  <img src="" width="500" alt="Initialize Repository Screenshot">
+</p>
+
+
+---
+---
 
 
 
