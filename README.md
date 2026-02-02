@@ -23,11 +23,13 @@ Types of Kubernetes services  :
      - [Liveness](#example-23)
      - [Readiness](#example-23)
      - [Startup](#example-23)
-- [What is service in K8S & also Diff Between Service and lables](#example-0)
-- [Namespace](#example-26)
-- [Volumes](#example-27)
+- [What is service in K8S & also Diff Between Service and lables](#example-25)
+- [Namespace's](#example-26)
+- [Volume's](#example-28)
 
 
+---
+[Command's](#example-100)
 <br>
 
 
@@ -317,6 +319,14 @@ kubectl run mypod --image=nginx --port=80
 - `mypod` → Name of the Pod
 - `--image=nginx` → Container image used for the Pod
 - `--port=80` → Port exposed by the container (informational)
+
+
+
+<a id="example-100"></a>
+
+
+###    Command's
+
   
 ```
 
@@ -420,6 +430,116 @@ kubectl delete svc <service-name> -n <namespace-name>        # Delete Service fr
 kubectl apply -f filename.yml
 kubectl delete -f filename.yml   # 🗑️ Delete using YAML file
 ```
+
+###  Namespace 
+
+```yaml
+# ================== NAMESPACE – ALL IMPORTANT COMMANDS ==================
+
+
+# ---------- LIST NAMESPACES ----------
+
+kubectl get namespaces
+# List all namespaces
+
+kubectl get ns
+# Short form to list namespaces
+
+
+# ---------- CREATE & DELETE NAMESPACE ----------
+
+kubectl create namespace dev
+# Create a namespace named dev
+
+kubectl delete namespace dev
+# Delete the dev namespace
+
+
+# ---------- WORK WITH PODS IN A NAMESPACE ----------
+
+kubectl get pods -n dev
+# List all Pods in dev namespace
+
+kubectl get pod mypod -n dev
+# Get a specific Pod from dev namespace
+
+kubectl describe pod mypod -n dev
+# Show detailed information about a Pod
+
+kubectl delete pod mypod -n dev
+# Delete a Pod from dev namespace
+
+
+# ---------- CREATE RESOURCES IN A SPECIFIC NAMESPACE ----------
+
+kubectl apply -f pod.yml -n dev
+# Create a Pod in dev namespace
+
+kubectl apply -f deployment.yml -n dev
+# Create a Deployment in dev namespace
+
+kubectl apply -f service.yml -n dev
+# Create a Service in dev namespace
+
+
+# ---------- SERVICE COMMANDS WITH NAMESPACE ----------
+
+kubectl describe service <service-name> -n dev
+# Show detailed info of a Service
+
+kubectl delete service <service-name>
+# Delete a Service from default namespace
+
+kubectl delete svc <service-name>
+# Short form to delete a Service
+
+kubectl delete svc <service-name> -n dev
+# Delete a Service from dev namespace
+
+
+# ---------- SET & CHECK DEFAULT NAMESPACE ----------
+
+kubectl config set-context --current --namespace=dev
+# Set dev as default namespace
+
+kubectl config view --minify
+# Show current context details
+
+kubectl config view --minify | grep namespace
+# Verify the current default namespace
+
+
+# ---------- GET ALL RESOURCES ----------
+
+kubectl get all -n dev
+# List all resources in dev namespace
+
+
+# ---------- CLUSTER-SCOPED (NON-NAMESPACED) RESOURCES ----------
+
+kubectl api-resources --namespaced=false
+# List resources that are NOT bound to any namespace
+# Examples: nodes, namespaces, persistentvolumes
+
+
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 <a id="example-16"></a>
 
@@ -1968,7 +2088,7 @@ spec:
 
 
 
-<a id="example-0"></a>
+<a id="example-25"></a>
 
 
 
@@ -2062,33 +2182,117 @@ Client → Service → Pods (matched by labels)
 
 #   NameSpace 
 
+[Screenshot's](#example-27)
+
+###  🔹 What is a Namespace in Kubernetes?
+
+
+A Namespace in Kubernetes is a logical isolation mechanism used to organize and separate resources within the same cluster.
+
+A Namespace is a logical partition inside a Kubernetes cluster.<br>
+It is used to divide cluster resources among multiple teams, projects, or environments.
+
+👉 Simple line:<br>
+Namespace = virtual cluster inside a Kubernetes cluster
+
+###   🔹 Why do we need Namespaces?
+
+- A single cluster can host:
+  - Multiple applications
+  - Multiple teams
+  - Multiple environments (dev / test / prod)
+- Avoids resource name conflicts
+- Helps in:
+  - Resource isolation
+  - Access control (RBAC)
+  - Resource limits (CPU, memory)
+    
+---
+
+###   🔹 Default Namespaces in Kubernetes
+
+When a cluster is created, Kubernetes already has some namespaces:
+
+| Namespace         | Purpose                                         |
+| ----------------- | ----------------------------------------------- |
+| `default`         | Where resources go if no namespace is specified<br>The four pods running on the master node belong to the `kube-system` namespace |
+| `kube-system`     | Kubernetes internal components                  |
+| `kube-public`     | Publicly readable data                          |
+| `kube-node-lease` | Node heartbeat & health info                    |
 
 
 
 
+>Create a namespace using command too see [click here](#example-100)
+
+###  Second method using Yaml file(Recommended)
+
+```yaml
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: dev
+```
+Apply:
+
+```
+kubectl apply -f namespace.yml
+```
+
+###  🔹 Create Resources Inside a Namespace using file (Best Practice)
+
+```yaml
+apiVersion: v1
+kind: Pod
+metadata:
+  name: mypod
+  namespace: dev
+spec:
+  containers:
+  - name: nginx
+    image: nginx
+```
+
+
+---
+
+<a id="example-27"></a>
+
+
+#   Screenshot's
+
+
+
+- Checked existing Kubernetes namespaces using `kubectl get ns`
+- Verified system pods running in `kube-system` namespace
+- Created a new custom namespace `nikii`
+- Deployed an application in `nikii` namespace using deployment YAML
+- Verified deployment pods are running in `nikii` namespace
+- Created another namespace `misal` for testing purpose
+- Created a Pod inside `misal` namespace
+- Changed default namespace using `kubectl config set-context` and verified pods
 
 
 
 
+| **Terminal**    | ****          |
+|--------------------------------|------------------------------------|
+| ![VS]() | ![AWS]() |
 
 
 
+<p align="center">
+  <img src="" width="500" alt="Initialize Repository Screenshot">
+</p>
 
 
+---
+---
+
+<a id="example-28"></a>
 
 
-
-
-
-
-
-
-
-
-
-
-
-
+#  Volumes
 
 
 
