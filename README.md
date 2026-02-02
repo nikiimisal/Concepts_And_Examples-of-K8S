@@ -2277,12 +2277,12 @@ spec:
 
 | **Terminal**    | ****          |
 |--------------------------------|------------------------------------|
-| ![VS]() | ![AWS]() |
+| ![VS](https://github.com/nikiimisal/Concepts_And_Examples-of-K8S/blob/main/img/Screenshot%202026-02-02%20091151.png?raw=true) | ![AWS](https://github.com/nikiimisal/Concepts_And_Examples-of-K8S/blob/main/img/Screenshot%202026-02-02%20091202.png?raw=true) |
 
 
 
 <p align="center">
-  <img src="" width="500" alt="Initialize Repository Screenshot">
+  <img src="https://github.com/nikiimisal/Concepts_And_Examples-of-K8S/blob/main/img/Screenshot%202026-02-02%20091231.png?raw=true" width="500" alt="Initialize Repository Screenshot">
 </p>
 
 
