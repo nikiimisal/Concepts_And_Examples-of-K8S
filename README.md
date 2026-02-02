@@ -1966,7 +1966,10 @@ spec:
 ---
 ---
 
+
+
 <a id="example-25"></a>
+
 
 
 #  What is service in K8S  & also Diff Between Service and lables
@@ -2054,6 +2057,10 @@ Client → Service → Pods (matched by labels)
 ---
 
 
+<a id="example-26"></a>
+
+
+#   NameSpace 
 
 
 
