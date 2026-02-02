@@ -23,7 +23,7 @@ Types of Kubernetes services  :
      - [Liveness](#example-23)
      - [Readiness](#example-23)
      - [Startup](#example-23)
-- [What is service in K8S & also Diff Between Service and lables](#examples-24)
+- [What is service in K8S & also Diff Between Service and lables](#examples-25)
 - [Namespace](#examples-26)
 - [Volumes](#examples-27)
 
