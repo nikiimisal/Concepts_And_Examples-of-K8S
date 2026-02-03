@@ -2358,6 +2358,8 @@ volumes:
     type: Directory
 ```
 
+>Used EBS storage
+
 ---
 
 ###  3️⃣ persistentVolumeClaim (PVC) / PersistentVolume (PV)
@@ -2419,6 +2421,9 @@ volumes:
     path: "/shared-data"
 ```
 
+>Used EFS storage
+
+
 ---
 
 
@@ -2433,7 +2438,110 @@ volumes:
 
 ---
 
+---
+
+## Scripts
+
+ 2️⃣ hostPath Volume  `hostpath.yml`
+
+```yaml
+apiVersion: apps/v1                     # Specifies the API version used for Deployment
+kind: Deployment                        # Defines this resource as a Deployment
+metadata:                               # Metadata section for the Deployment
+  name: mydeploy                        # Name of the Deployment object
+spec:                                   # Specification of desired state
+  replicas: 3                           # Number of Pod replicas to run
+  selector:                             # Selector used to identify Pods managed by this Deployment
+    matchLabels:                        # Uses label matching to select Pods
+      app: myapp                        # Deployment will manage Pods with label app=myapp
+  template:                             # Pod template used to create new Pods
+    metadata:                           # Metadata for the Pod
+      labels:                           # Labels assigned to the Pod
+        app: myapp                      # Label used by Deployment and Service to identify Pod
+    spec:                               # Specification of the Pod
+      containers:                       # List of containers inside the Pod
+      - name: mycontainer               # Name of the container
+        image: nginx                    # Docker image used for the container
+        ports:                          # Ports exposed by the container
+        - containerPort: 80             # Application listens on port 80 inside the container
+        volumeMounts:                   # Defines where volumes are mounted inside the container
+        - name: myvolume                # Name of the volume to mount  # For Use
+          mountPath: /usr/share/nginx/html # Path inside container where volume is attached
+      volumes:                          # Declares volumes available to the Pod
+      - name: myvolume                  # Name of the volume      # For Create
+        hostPath:                       # Uses a directory from the worker node filesystem
+          path: /home/ubuntu/bkp        # Directory path on worker node (stored on EBS)
+          type: DirectoryOrCreate       # Creates directory if it does not already exist
+```
+  
 
 
-  
-  
+  6️⃣ nfs Volume `nfs.yml`
+
+
+
+
+
+
+
+
+
+
+---
+
+#  Screenshot's
+
+
+
+-  Create a hostPath Volume  `hostpath.yml`
+
+
+
+<p align="center">
+  <img src="" width="500" alt="Initialize Repository Screenshot">
+</p>
+
+
+📌 HostPath Volume Verification – Points
+
+- Created a folder named `bkp` on the worker node.
+- Added/modified content inside `bkp/index.html` on the worker node.
+- The folder `bkp` is mounted into all Pods using a hostPath volume.
+- Executed `kubectl exec` to enter different Pods.
+- Ran `curl http://localhost` inside each Pod.
+- Same updated content was visible in all Pods, confirming shared storage.
+- This proves Pods are reading data directly from the worker node filesystem.
+- Any change on the node is immediately reflected inside all Pods.
+
+
+<p align="center">
+  <img src="" width="500" alt="Initialize Repository Screenshot">
+</p>
+
+
+🌐 Accessing Application in Browser using Service (NodePort)
+
+- Verified the application output inside the Pod using curl http://localhost.
+- To access the application externally, a Kubernetes Service is required.
+- Created a NodePort Service to expose the Pods outside the cluster.
+- The Service selects Pods using matching labels.
+- Kubernetes assigned a NodePort automatically.
+- The application became accessible using Worker Node Public IP + NodePort.
+- Opened a browser and accessed the application via the NodePort URL.
+```
+http://<WORKER_NODE_PUBLIC_IP>:31488
+```
+- The same content displayed in the browser confirms Service is working correctly.
+
+
+
+| **Terminal**    | ****          |
+|--------------------------------|------------------------------------|
+| ![VS]() | ![AWS]() |
+
+
+
+---
+
+
+
