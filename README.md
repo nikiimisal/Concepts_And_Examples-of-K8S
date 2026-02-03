@@ -2498,7 +2498,7 @@ spec:                                   # Specification of desired state
 
 
 <p align="center">
-  <img src="" width="500" alt="Initialize Repository Screenshot">
+  <img src="https://github.com/nikiimisal/Concepts_And_Examples-of-K8S/blob/main/img/Screenshot%202026-02-03%20190357.png?raw=true" width="500" alt="Initialize Repository Screenshot">
 </p>
 
 
@@ -2515,7 +2515,7 @@ spec:                                   # Specification of desired state
 
 
 <p align="center">
-  <img src="" width="500" alt="Initialize Repository Screenshot">
+  <img src="https://github.com/nikiimisal/Concepts_And_Examples-of-K8S/blob/main/img/Screenshot%202026-02-03%20194750.png?raw=true" width="500" alt="Initialize Repository Screenshot">
 </p>
 
 
@@ -2537,8 +2537,24 @@ http://<WORKER_NODE_PUBLIC_IP>:31488
 
 | **Terminal**    | ****          |
 |--------------------------------|------------------------------------|
-| ![VS]() | ![AWS]() |
+| ![VS](https://github.com/nikiimisal/Concepts_And_Examples-of-K8S/blob/main/img/Screenshot%202026-02-03%20195426.png?raw=true) | ![AWS](https://github.com/nikiimisal/Concepts_And_Examples-of-K8S/blob/main/img/Screenshot%202026-02-03%20193739.png?raw=true) |
 
+`Service.yml`
+
+```yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: mysvc
+spec:
+  selector:
+    app: myapp
+  type: NodePort
+  ports:
+    - protocol: TCP
+      port: 80 # service port
+      targetPort: 80 # pod port
+```
 
 
 ---
