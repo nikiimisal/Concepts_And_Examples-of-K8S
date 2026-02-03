@@ -2594,8 +2594,8 @@ spec:
 
 ---
 
-- NFS Setup
-
+- Create a NFS Volume `nfs.yml`
+  
 📦 NFS (EFS) Practical Setup – Points
 
 - Opened AWS Console and searched for EFS.
