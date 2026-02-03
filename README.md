@@ -2294,6 +2294,8 @@ spec:
 
 #  Volumes
 
+[Example or say practicess Schreenshots](#example-29)
+
 ###   📌 What is a Volume?
 
 A Volume in Kubernetes is a directory accessible to containers in a Pod, which persists data beyond the life of a container.
@@ -2489,6 +2491,11 @@ spec:                                   # Specification of desired state
 
 ---
 
+
+<a id="example-29"></a>
+
+
+
 #  Screenshot's
 
 
@@ -2521,7 +2528,7 @@ spec:                                   # Specification of desired state
 
 🌐 Accessing Application in Browser using Service (NodePort)
 
-- Verified the application output inside the Pod using curl http://localhost.
+- Verified the application output inside the Pod using `curl http://localhost`.
 - To access the application externally, a Kubernetes Service is required.
 - Created a NodePort Service to expose the Pods outside the cluster.
 - The Service selects Pods using matching labels.
