@@ -2480,7 +2480,35 @@ spec:                                   # Specification of desired state
 
   6️⃣ nfs Volume `nfs.yml`
 
-
+```yaml
+apiVersion: apps/v1   # Kubernetes API version for Deployment
+kind: Deployment      # Resource type: Deployment (manages pods)
+metadata:
+  name: mydeploy      # Name of the deployment
+spec:
+  replicas: 3          # Number of pod replicas to run
+  selector:
+    matchLabels:
+      app: myapp       # Selects pods with label app=myapp
+  template:
+    metadata:
+      labels:
+        app: myapp     # Label assigned to pods created by this Deployment
+    spec:
+      containers:
+      - name: mycontainer     # Container name inside pod
+        image: nginx          # Container image to use (nginx)
+        ports:
+        - containerPort: 80   # Port exposed by container
+        volumeMounts:         # Mount inside pod
+        - name: myefsvolume   # Reference name of the volume
+          mountPath: /usr/share/nginx/html   # Path inside container
+      volumes:                 # Volume source (outside pod)
+      - name: myefsvolume       # Volume name (matches volumeMounts)
+        nfs: 
+          path: /data           # Path in NFS (EFS) share
+          server: fs-0f58d373e2e9cf075.efs.eu-north-1.amazonaws.com  # EFS DNS from AWS
+```
 
 
 
@@ -2542,7 +2570,7 @@ http://<WORKER_NODE_PUBLIC_IP>:31488
 
 
 
-| **Terminal**    | ****          |
+| **Terminal**    | **Browser**          |
 |--------------------------------|------------------------------------|
 | ![VS](https://github.com/nikiimisal/Concepts_And_Examples-of-K8S/blob/main/img/Screenshot%202026-02-03%20195426.png?raw=true) | ![AWS](https://github.com/nikiimisal/Concepts_And_Examples-of-K8S/blob/main/img/Screenshot%202026-02-03%20193739.png?raw=true) |
 
@@ -2565,6 +2593,92 @@ spec:
 
 
 ---
+
+- NFS Setup
+
+📦 NFS (EFS) Practical Setup – Points
+
+- Opened AWS Console and searched for EFS.
+- Created a new EFS named `K8S-EFS`.
+- Went to Network settings of EFS.
+- Allowed required NFS ports (2049) in the Security Group.
+- Copied Security Group ID and updated inbound rules in EC2 Security Groups.
+- Logged in to the Kubernetes worker node.
+- Created a directory for EFS mounting on the node.
+- Bypassed local EBS (hostPath) storage to use shared storage.
+- Checked whether NFS client was installed.
+- Installed NFS utilities if not present.
+- Selected K8S-EFS → Attach option in AWS Console.
+- Chose Mount via DNS name method.
+- Copied the mount command provided by AWS.
+- Executed the mount command on the worker node.
+- Verified that EFS is successfully mounted and ready for Kubernetes use.
+
+
+
+<p align="center">
+  <img src="https://github.com/nikiimisal/Concepts_And_Examples-of-K8S/blob/main/img/Screenshot%202026-02-03%20200832.png?raw=true" width="500" alt="Initialize Repository Screenshot">
+</p>
+
+
+| **Terminal**    | ****          |
+|--------------------------------|------------------------------------|
+| ![VS](https://github.com/nikiimisal/Concepts_And_Examples-of-K8S/blob/main/img/Screenshot%202026-02-03%20203448.png?raw=true) | ![AWS](https://github.com/nikiimisal/Concepts_And_Examples-of-K8S/blob/main/img/Screenshot%202026-02-03%20201504.png?raw=true) |
+
+
+
+| **Terminal**    | ****          |
+|--------------------------------|------------------------------------|
+| ![VS](https://github.com/nikiimisal/Concepts_And_Examples-of-K8S/blob/main/img/Screenshot%202026-02-03%20203740.png?raw=true) | ![AWS](https://github.com/nikiimisal/Concepts_And_Examples-of-K8S/blob/main/img/Screenshot%202026-02-03%20203813.png?raw=true) |
+
+
+<p align="center">
+  <img src="https://github.com/nikiimisal/Concepts_And_Examples-of-K8S/blob/main/img/Screenshot%202026-02-03%20203754.png?raw=true" width="500" alt="Initialize Repository Screenshot">
+</p>
+
+
+
+
+
+---
+---
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
