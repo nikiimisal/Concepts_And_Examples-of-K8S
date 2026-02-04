@@ -525,9 +525,165 @@ kubectl api-resources --namespaced=false
 ```
 
 
+###  Volume's
+
+```yaml
+# ================== VOLUMES – ONLY COMMANDS ==================
 
 
+# ---------- POD / DEPLOYMENT WITH VOLUMES ----------
 
+kubectl apply -f pod.yml
+# Create Pod with volume
+
+kubectl apply -f deployment.yml
+# Create Deployment with volume
+
+kubectl delete pod <pod-name>
+# Delete Pod
+
+kubectl delete deployment <deployment-name>
+# Delete Deployment
+
+
+# ---------- CHECK VOLUMES IN POD ----------
+
+kubectl get pods
+# List Pods
+
+kubectl describe pod <pod-name>
+# See volume & volumeMount details
+
+kubectl get pod <pod-name> -o yaml
+# View volume configuration in YAML
+
+
+# ---------- EXEC INTO POD (VERIFY VOLUME) ----------
+
+kubectl exec -it <pod-name> -- /bin/bash
+# Enter container
+
+df -h
+# Check mounted storage
+
+mount
+# List mounted volumes
+
+ls <mount-path>
+# Verify data inside mounted volume
+
+
+# ---------- CONFIGMAP (VOLUME SOURCE) ----------
+
+kubectl create configmap mysqlconfig --from-literal=mysql_root_password=root
+# Create ConfigMap from key-value
+
+kubectl create configmap appconfig --from-file=config.txt
+# Create ConfigMap from file
+
+kubectl get configmap
+# List ConfigMaps
+
+kubectl describe configmap mysqlconfig
+# View ConfigMap details
+
+kubectl delete configmap mysqlconfig
+# Delete ConfigMap
+
+
+# ---------- SECRET (VOLUME SOURCE) ----------
+
+kubectl create secret generic mysqlsecret --from-literal=mysql_root_password=root
+# Create Secret from key-value
+
+kubectl create secret generic tlssecret --from-file=tls.key --from-file=tls.crt
+# Create Secret from files
+
+kubectl get secrets
+# List Secrets
+
+kubectl describe secret mysqlsecret
+# View Secret details
+
+kubectl delete secret mysqlsecret
+# Delete Secret
+
+
+# ---------- EMPTYDIR VOLUME ----------
+
+kubectl apply -f emptydir-pod.yml
+# Create Pod using emptyDir volume
+
+kubectl delete pod emptydir-pod
+# Delete Pod (data removed automatically)
+
+
+# ---------- HOSTPATH VOLUME ----------
+
+kubectl apply -f hostpath-pod.yml
+# Create Pod using hostPath
+
+kubectl describe pod <pod-name>
+# Verify hostPath mount
+
+kubectl delete pod <pod-name>
+# Delete Pod (node data remains)
+
+
+# ---------- NFS / EFS VOLUME ----------
+
+kubectl apply -f nfs.yml
+# Create Deployment using NFS/EFS
+
+kubectl describe pod <pod-name>
+# Verify NFS mount
+
+kubectl delete deployment mydeploy
+# Delete Deployment using NFS
+
+
+# ---------- PERSISTENT VOLUME (PV) ----------
+
+kubectl apply -f pv.yml
+# Create PersistentVolume
+
+kubectl get pv
+# List PVs
+
+kubectl describe pv <pv-name>
+# View PV details
+
+kubectl delete pv <pv-name>
+# Delete PV
+
+
+# ---------- PERSISTENT VOLUME CLAIM (PVC) ----------
+
+kubectl apply -f pvc.yml
+# Create PVC
+
+kubectl get pvc
+# List PVCs
+
+kubectl describe pvc <pvc-name>
+# View PVC details
+
+kubectl delete pvc <pvc-name>
+# Delete PVC
+
+
+# ---------- DEBUG / TROUBLESHOOT ----------
+
+kubectl get events
+# Check volume related errors
+
+kubectl logs <pod-name>
+# Check Pod logs
+
+kubectl describe pod <pod-name> | grep -i volume
+# Filter volume info
+
+```
 
 
 
@@ -2295,6 +2451,7 @@ spec:
 #  Volumes
 
 [Example or say practicess Schreenshots](#example-29)
+[Difference's](#example-30)
 
 ###   📌 What is a Volume?
 
@@ -2381,7 +2538,7 @@ volumes:
 
 ###  4️⃣ configMap Volume
 
-- What it is: Stores config data as files or env variables.
+- What it is: Stores config data as files or env variables or Secrets.
 - Lifetime: Exists as long as Pod exists.
 - Use case: Provide configuration to apps (like `.properties`, `.yaml` files) without rebuilding the image.
 - Example:
@@ -2439,6 +2596,20 @@ volumes:
 - Shared → nfs
 
 ---
+
+<a id="example-30"></a>
+
+##  Different Between's
+
+| **ConfigMap**                               | **NFS Volume**                                |
+| ------------------------------------------- | --------------------------------------------- |
+| 1) Used for configuration file              | 1) Used for application data file             |
+| eg: `/etc/nginx/conf.d/default.conf`        | eg: `/usr/share/nginx/html/index.html`        |
+| 2) Easy to rollback <br> – creates versions | 2) No version history <br> – hard to rollback |
+| 3) Read-only access                         | 3) Read & write                               |
+
+
+
 
 ---
 
@@ -2510,9 +2681,37 @@ spec:
           server: fs-0f58d373e2e9cf075.efs.eu-north-1.amazonaws.com  # EFS DNS from AWS
 ```
 
+4️⃣ configMap Volume `configmap.yml`
 
+```yaml
+apiVersion: apps/v1                     # Kubernetes API version for Deployment object
+kind: Deployment                        # Resource type is Deployment
+metadata:                               # Metadata section (name, labels, etc.)
+  name: mydeploy                        # Name of the Deployment
 
+spec:                                   # Specification of the Deployment
+  replicas: 3                           # Number of pod replicas to run
+  selector:                             # Selector to identify which Pods belong to this Deployment
+    matchLabels:                        # Match Pods having these labels
+      app: myapp                        # Label key-value used to select Pods
 
+  template:                             # Pod template (how Pods should be created)
+    metadata:                           # Metadata for Pods
+      labels:                           # Labels applied to Pods
+        app: myapp                      # Label used for selection and Service mapping
+
+    spec:                               # Pod specification
+      containers:                       # List of containers inside the Pod
+      - name: mycontainer               # Name of the container
+        image: mysql                    # Docker image used (MySQL image)
+
+        env:                            # Environment variables for the container
+        - name: MYSQL_ROOT_PASSWORD     # Environment variable name used by MySQL
+          valueFrom:                    # Value will be taken from an external source
+            configMapKeyRef:            # Reference to a ConfigMap
+              name: mysqlconfig         # Name of the ConfigMap
+              key: MYSQL_ROOT_PASSWORD  # Key inside ConfigMap whose value will be injected
+```
 
 
 
@@ -2537,7 +2736,7 @@ spec:
 </p>
 
 
-📌 HostPath Volume Verification – Points
+📌 HostPath Volume Verification 
 
 - Created a folder named `bkp` on the worker node.
 - Added/modified content inside `bkp/index.html` on the worker node.
@@ -2596,7 +2795,7 @@ spec:
 
 - Create a NFS Volume `nfs.yml`
   
-📦 NFS (EFS) Practical Setup – Points
+📦 NFS (EFS) Practical Setup 
 
 - Opened AWS Console and searched for EFS.
 - Created a new EFS named `K8S-EFS`.
@@ -2638,6 +2837,12 @@ spec:
 
 
 
+
+---
+
+-  Create a configMap Volume `configmap.yml`
+
+  
 
 
 ---
