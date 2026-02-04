@@ -29,7 +29,7 @@ Types of Kubernetes services  :
 
 
 ---
-[Command's](#example-100)
+[All Related Command's](#example-100)
 <br>
 
 
@@ -328,49 +328,78 @@ kubectl run mypod --image=nginx --port=80
 ###    Command's
 
   
-```
+```yaml
+# ================== POD – ALL IMPORTANT COMMANDS ==================
 
-kubectl run mypod --image=nginx --port=80             # Create A pod using command
 
-kubectl exec -it <pod-name> -- /bin/bash             # Command to access the Pod shell.
+# ---------- CREATE & ACCESS POD ----------
 
-kubectl get pods                                      #  To check whether a Pod has been created or not, use the following command
+kubectl run mypod --image=nginx --port=80
+# Create a Pod using command
+
+kubectl exec -it <pod-name> -- /bin/bash
+# Access the Pod shell
+
+
+# ---------- LIST PODS ----------
+
+kubectl get pods
 kubectl get pod
 kubectl get po
+# Check whether Pods are created or not
 
-kubectl get pods -n <namespace-name>                  #  To view Pods in a specific namespace
+kubectl get pods -n <namespace-name>
+# View Pods in a specific namespace
 
 
-kubectl describe pod <pod-name>                       # To see detailed information about a Pod
+# ---------- POD DETAILS ----------
+
+kubectl describe pod <pod-name>
+# See detailed information about a Pod
+
 kubectl get all
+# Show all resources in current namespace
 
-kubectl get pods -o wide                              #  To view Pod status with node and IP details
+kubectl get pods -o wide
+# View Pod status with node and IP details
 
-##  On our behalf, Kubernetes creates a file that contains all the required details. To view those details, run this command.
 
-kubectl get pods -o yaml
+# ---------- POD YAML / JSON OUTPUT ----------
+#  On our behalf, Kubernetes creates a file that contains all the required details. To view those details, run this command.
+
+kubectl get pods -o yaml                   # View complete Pod configuration
 kubectl get pods -o json
 
 
-kubectl logs <pod-name>                                #  To check Pod logs
-kubectl get pods --show-labels                         #  To show labels with pods
-kubectl get all                                        # shows all common Kubernetes resources (pods, services, deployments, replicasets, etc.) in the current namespace
+# ---------- POD LOGS & LABELS ----------
+
+kubectl logs <pod-name>                 # Check Pod logs
+kubectl get pods --show-labels          # Show labels with Pods
+kubectl get all                         # shows all common Kubernetes resources (pods, services, deployments, replicasets, etc.) in the current namespace
+
+
+
+# ---------- REPLICATION CONTROLLER (RC) ----------
 
 kubectl get rc myrc                                    # This command is used to get detailed information    # about a specific ReplicationController named "myrc"
 kubectl scale rc myrc --replicas=6                     # This command is used to scale the ReplicationController   # It changes the number of Pod replicas to 6
 kubectl scale rc myrc --replicas=15 && kubectl get rc myrc --watch       # This command scales the ReplicationController "myrc" to 15 replicas and then continuously watches its status in real time
 kubectl delete rc myrc                                 # Delete the rc
 
+
+
+# ---------- DEPLOYMENT ROLLOUT COMMANDS ----------
+
 kubectl rollout history deployment mydeployment                     # This command shows rollout history of a deployment
 kubectl rollout history deployment mydeployment --revision=2        # shows details of revision 2 of the deployment
 kubectl rollout undo deployment mydeployment                        # rolls back the deployment to the previous revision
 kubectl rollout undo deployment mydeployment --to-revision=2        # rolls back the deployment to a specific revision (2)
 kubectl set image deployment mydeployment nginx=nginx:1.25 --record   # updates the container image and records the change in history
-kubectl rollout --help
+kubectl rollout --help                                               # Rollout help commands
                     
 
 
-# Delete Pod:
+# ---------- DELETE POD ----------
 
 rm -f pod.yml                                           # file is delete but pod  still running
 kubectl delete -f pod.yml 
@@ -378,11 +407,6 @@ kubectl delete -f pod.yml
 kubectl delete pod <pod-name>                           # Delete a specific Pod
 kubectl delete pod <pod-name> -n <namespace-name>       # Delete Pod from a specific namespace
 ```
-
-
-
-
-
 
 
 
@@ -403,7 +427,12 @@ kubectl expose pod mypod --name=mysvc --type=NodePort --port=80 --target-port=80
 - `--port=80` → Service port
 - `--target-port=80` → Container port inside the Pod
 
+
+
+
 ```
+# ================== SERVICE – ALL IMPORTANT COMMANDS ==================
+
 kubectl get svc             # check the Service
 kubectl get svc mysvc       # To see the NodePort number
 <NodeIP>:<NodePort>         # You can access the application using
@@ -426,7 +455,7 @@ kubectl delete svc <service-name> -n <namespace-name>        # Delete Service fr
 
 >  Apply, Run, Execuite `.YAML` file
 
-```
+```yaml
 kubectl apply -f filename.yml
 kubectl delete -f filename.yml   # 🗑️ Delete using YAML file
 ```
