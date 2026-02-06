@@ -2479,8 +2479,8 @@ spec:
 
 #  Volumes
 
-[Example or say practicess Schreenshots](#example-29)
-[Difference's](#example-30)
+- [Example or say practicess Schreenshots](#example-29)<br>
+- [Difference's](#example-30)
 
 ###   📌 What is a Volume?
 
@@ -2905,8 +2905,7 @@ kubectl create secret docker-registry mydockersecret \
 
 #  Screenshot's
 
-- [For Script's](#example=31)
-
+- [For Script's](#example-31)
 ## Create a hostPath Volume  `hostpath.yml`
 
 
