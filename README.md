@@ -2701,6 +2701,32 @@ volumes:
 
 
 
+| Component / Storage | ConfigMap                     | Secret                        |
+| ------------------- | ----------------------------- | ----------------------------- |
+| **Stored at**       | Master / ETCD                 | Master / ETCD                 |
+| **Type of data**    | Configuration file            | Passwords / sensitive data    |
+| **Data format**     | Plain text                    | Base64 encoded                |
+| **Purpose**         | Store application config      | Store secrets for apps        |
+| **Usage in Pod**    | Environment variable / volume | Environment variable / volume |
+
+
+
+
+
+
+| Feature           | ConfigMap                                                      | Secret                                                              |
+| ----------------- | -------------------------------------------------------------- | ------------------------------------------------------------------- |
+| **Purpose**       | Store non-sensitive configuration data                         | Store sensitive data (passwords, tokens, keys)                      |
+| **Data Storage**  | Plain text                                                     | Base64 encoded (not encrypted by default)                           |
+| **Use Case**      | Application configuration, environment variables, config files | Passwords, API keys, TLS certificates, Docker credentials           |
+| **Type**          | Opaque by default                                              | Opaque, `kubernetes.io/dockerconfigjson`, `kubernetes.io/tls`, etc. |
+| **Access Method** | Environment variables, volumes                                 | Environment variables, volumes                                      |
+| **Security**      | Not secure; readable by anyone with access to the namespace    | More secure; intended for sensitive data; can be restricted by RBAC |
+| **Example**       | DB_HOST, LOG_LEVEL, APP_MODE                                   | MYSQL_ROOT_PASSWORD, .dockerconfigjson, TLS cert/key                |
+| **Lifetime**      | Exists as long as the Pod/namespace exists                     | Exists as long as the Pod/namespace exists                          |
+| **Use in Pods**   | Mounted as files or environment variables                      | Mounted as files or environment variables                           |
+|  master           
+
 ---
 
 
