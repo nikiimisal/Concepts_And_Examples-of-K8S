@@ -2969,6 +2969,86 @@ kubectl create secret docker-registry mydockersecret \
   --docker-email=<your-email>
  ```
 
+3️⃣ persistentVolumeClaim (PVC) / PersistentVolume (PV)
+
+
+`pv.yml`
+
+```yaml
+apiVersion: v1                 # Kubernetes API version; PV is a core (v1) resource
+kind: PersistentVolume         # Resource type – defines a Persistent Volume
+
+metadata:                      # Metadata about the PV
+  name: mypv                   # Name of the PersistentVolume (must be unique in cluster)
+
+spec:                          # Specification of the PersistentVolume
+  capacity:                    # Storage capacity details
+    storage: 10Gi              # Total storage size allocated for this PV (10 Gigabytes)
+
+  accessModes:                 # How the volume can be mounted by Pods
+    - ReadWriteOnce             # Volume can be mounted as read-write by only one node at a time
+
+  hostPath:                    # Volume type – uses a directory from the worker node filesystem
+    path: /home/ubuntu/bkp     # Actual directory path on the worker node (inside its EBS disk)
+    type: DirectoryOrCreate    # If directory does not exist, Kubernetes will create it automatically
+```
+
+`pvc.yml`
+```yaml
+apiVersion: apps/v1              # Kubernetes API version used for this resource
+kind: PersistentVolumeClaim      # Resource type – defines a Persistent Volume Claim
+
+metadata:                        # Metadata for the PVC
+  name: mypvc                    # Name of the PersistentVolumeClaim
+
+spec:                            # Specification of the PVC
+  resources:                     # Resource requirements for the claim
+    requests:                    # Requested resources
+      storage: 5Gi               # Amount of storage requested from a PersistentVolume
+
+  accessModes:                   # Access mode required by the Pod
+    - ReadWriteOnce               # Volume will be mounted as read-write by a single node
+```
+
+`pvpod.yml`
+```yaml
+# bind mount  -> physical folder on node  -> /home/ec2-user/bkp -> mounted inside container
+# named mount -> logical volume name       -> myvolume         -> mounted to container path
+
+apiVersion: apps/v1                 # Kubernetes API version for Deployment
+kind: Deployment                    # Resource type – Deployment
+
+metadata:                           # Metadata for the Deployment
+  name: mydeploy                    # Name of the Deployment
+
+spec:                               # Deployment specification
+  replicas: 3                       # Number of Pod replicas to run
+
+  selector:                         # Selector to identify Pods managed by this Deployment
+    matchLabels:                    # Labels to match
+      app: myapp                    # Pods with this label will be selected
+
+  template:                         # Pod template used by the Deployment
+    metadata:                       # Pod metadata
+      labels:                       # Labels applied to Pods
+        app: myapp                  # Must match selector labels
+
+    spec:                           # Pod specification
+      containers:                  # List of containers in the Pod
+      - name: mycontainer           # Name of the container
+        image: nginx                # Nginx container image
+        ports:                      # Ports exposed by the container
+        - containerPort: 80         # Nginx listens on port 80
+
+        volumeMounts:               # Mount volumes inside the container
+        - name: myvolume            # Name of the volume to mount
+          mountPath: /usr/share/nginx/html   # Path inside container where volume is mounted
+
+      volumes:                      # Volumes available to the Pod
+      - name: myvolume              # Volume name (must match volumeMounts name)
+        persistentVolumeClaim:      # Use a PersistentVolumeClaim
+          claimName: mypvc           # Name of the PVC to bind this volume
+```
 
 ---
 
@@ -3320,10 +3400,30 @@ kubectl create secret docker-registry mydockersecret \
 ##    create a volume persistentVolumeClaim (PVC) / PersistentVolume (PV) 
 
 
+###   📌 Persistent Volume (PV) & Persistent Volume Claim (PVC) Verification
+
+- PersistentVolume (PV) `mypv` create kela with 10Gi storage, access mode ReadWriteOnce (RWO) ani Retain reclaim policy.
+- PersistentVolumeClaim (PVC) `mypvc` create kela to request storage from `mypv`.
+- PV ani PVC successfully Bound zalele aahet, confirming correct storage mapping.
+- Deployment (`mydeploy`) create kela with nginx container.
+- Deployment madhil all Pods ne same PVC (`mypvc`) use keli.
+- PVC la container madhye `/usr/share/nginx/html` path var mount kela.
+- `kubectl get pods` madhe multiple Pods Running disat aahet.
+- `kubectl describe pod` madhe volume type = PersistentVolumeClaim confirm zala.
+- All Pods same persistent storage access karat aahet.
 
 
 
 
+
+<p align="center">
+  <img src="" width="500" alt="Initialize Repository Screenshot">
+</p>
+
+
+<p align="center">
+  <img src="" width="500" alt="Initialize Repository Screenshot">
+</p>
 
 
 
@@ -3492,6 +3592,83 @@ CronJob  : Create → Run → Delete
 
 ---
 ---
+###  Script
+
+`job.yml`
+
+```yaml
+apiVersion: batch/v1              # Kubernetes API version for Job resource
+kind: Job                         # Resource type – Job (used for one-time/batch tasks)
+
+metadata:                         # Metadata for the Job
+  name: myjob                     # Name of the Job
+  labels:                         # Labels attached to the Job
+    app: processing               # Label to identify processing-related workloads
+
+spec:                             # Job specification
+  completions: 5                  # Total number of successful Pod completions required
+  parallelism: 2                  # Number of Pods that can run in parallel at a time
+  backoffLimit: 4                 # Number of retries before the Job is marked as failed
+
+  template:                       # Pod template used by the Job
+    metadata:                     # Pod metadata
+      labels:                     # Labels applied to Pods
+        app: processing           # Same label for identification
+
+    spec:                         # Pod specification
+      containers:                # List of containers in the Pod
+      - name: dataprocessing      # Name of the container
+        image: python:3.9         # Python 3.9 container image
+
+        command: ["python", "-c"] # Command to run Python inline code
+        args:                     # Arguments passed to the command
+        - |                       # Multi-line Python script
+          print("processing data..........")   # Print start message
+          import time                            # Import time module
+          time.sleep(10)                         # Simulate processing delay
+          print("done")                          # Print completion message
+
+      restartPolicy: Never        # Pod will not restart after completion or failure
+```
+
+`cronjob.yml`
+
+```yaml
+apiVersion: batch/v1              # Kubernetes API version for CronJob resource
+kind: CronJob                     # Resource type – CronJob (runs Jobs on a schedule)
+
+metadata:                         # Metadata for the CronJob
+  name: mycronjob                 # Name of the CronJob
+  labels:                         # Labels attached to the CronJob
+    app: processing               # Label for identification
+
+spec:                             # CronJob specification
+  schedule: "*/1 * * * *"         # Cron schedule – runs every 1 minute
+
+  jobTemplate:                    # Template used to create Jobs on each schedule
+    spec:                         # Job-level specification
+      backoffLimit: 4             # Number of retries for a failed Job
+
+      template:                   # Pod template used by the Job
+        metadata:                 # Pod metadata
+          labels:                 # Labels applied to Pods
+            app: processing       # Label for Pods
+
+        spec:                     # Pod-level specification
+          containers:             # List of containers in the Pod
+          - name: dataprocessing  # Name of the container
+            image: python:3.9     # Python 3.9 container image
+
+            command: ["python", "-c"]  # Command to execute Python inline code
+            args:                 # Arguments passed to the command
+            - |                   # Multi-line Python script
+              print("processing data..........")  # Start message
+              import time                           # Import time module
+              time.sleep(10)                        # Simulate processing delay
+              print("done")                         # Completion message
+
+          restartPolicy: Never    # Pod will not restart after completion or failure
+```
 
 
 <a id="example-32"></a>
@@ -3499,6 +3676,34 @@ CronJob  : Create → Run → Delete
 
 #  Screenshot's
 
+📌 Job and CronJob Verification
+
+- Created a Job (`myjob`) using `job.yml`.
+- Applied the Job configuration using `kubectl apply -f job.yml`.
+- Kubernetes immediately created Pods for the Job.
+- As defined in the Job spec, only two Pods ran in parallel.
+- When a Pod completed execution, its status changed to Completed.
+- New Pods were created automatically until all required executions were finished.
+- This confirms that a Job runs batch tasks until completion.
+- Deleted all existing resources to start a clean setup.
+- Created a CronJob (`mycronjob`) using `cronjob.yml`.
+- Applied the CronJob configuration using `kubectl apply -f cronjob.yml`.
+- Initially, no Pods were visible because CronJobs run only on schedule.
+- At the scheduled time, Kubernetes automatically created a Job.
+- That Job then created a Pod, which started running immediately.
+- This proves that CronJobs automatically trigger Jobs at scheduled intervals.
 
 
+<p align="center">
+  <img src="" width="500" alt="Initialize Repository Screenshot">
+</p>
+
+
+<p align="center">
+  <img src="" width="500" alt="Initialize Repository Screenshot">
+</p>
+
+
+---
+---
 
