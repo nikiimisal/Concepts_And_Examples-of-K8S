@@ -26,6 +26,7 @@ Types of Kubernetes services  :
 - [What is service in K8S & also Diff Between Service and lables](#example-25)
 - [Namespace's](#example-26)
 - [Volume's](#example-28)
+- [Jobs & Cronjobs](#example-33)
 
 
 ---
@@ -430,7 +431,7 @@ kubectl expose pod mypod --name=mysvc --type=NodePort --port=80 --target-port=80
 
 
 
-```
+```yaml
 # ================== SERVICE – ALL IMPORTANT COMMANDS ==================
 
 kubectl get svc             # check the Service
@@ -438,7 +439,7 @@ kubectl get svc mysvc       # To see the NodePort number
 <NodeIP>:<NodePort>         # You can access the application using
 
 ```
-```
+```yaml
 
 kubectl get services                          # To view all Services
 kubectl get svc                               # To view all Services
@@ -774,7 +775,7 @@ kubectl describe pod <pod-name> | grep -i volume
 
 `Pod.yml`
 
-```
+```yaml
 apiVersion: v1
 kind: Pod
 metadata:
@@ -785,7 +786,7 @@ spec:
    containers:
      - name: mycontainer
 ```
-```
+```yaml
 # apiVersion specifies the Kubernetes API version being used
 apiVersion: v1
 
@@ -812,7 +813,7 @@ spec:
 
 `service.yml`
 
-```
+```yaml
 apiVersion: v1
 kind: Service
 metadata:
@@ -826,7 +827,7 @@ spec:
       port: 80 # service port
       targetPort: 80 # pod port
 ```
-```
+```yaml
 # apiVersion specifies the Kubernetes API version
 apiVersion: v1
 
@@ -1191,7 +1192,7 @@ An error is occurring. See this screenshot.
 
 #    Detail Replication controller  & Replica set pod 
 
-  [Example or say practicess Schreenshots](#example-19)
+-  [Example or say practicess Schreenshots](#example-19)
 
 ###  Why we need ReplicationController / ReplicaSet (before comparing)
 
@@ -1356,7 +1357,7 @@ ReplicaSet
 
 
 Replication controller file `myrc.yml`
-```
+```yaml
 apiVersion: v1
 kind: ReplicationController
 metadata:
@@ -1426,7 +1427,7 @@ spec:
 
 replica set file `myrc.yml`
 
-```
+```yaml
 ## Replication set file -> It does supports the conditions
 apiVersion: v1
 kind: ReplicaSet
@@ -2555,6 +2556,8 @@ volumes:
 - What it is: Persistent storage managed by Kubernetes.
 - Lifetime: Survives Pod restarts and deletion.
 - Use case: Databases, files, anything that must persist.
+- PV and PVC act as an isolation layer between Pods and storage volumes.
+- PV and PVC are used so that any backend storage (EBS, NFS, hostPath, etc.) can be changed without modifying the Pod YAML file. The Pod only talks to the PVC, not to the actual storage.
 - Example:
 ```yaml
 volumes:
@@ -2563,6 +2566,51 @@ volumes:
     claimName: my-pvc
 ```
 
+---
+
+PV & PVC – Access Modes and Capacity Binding
+
+Access Modes define how a Persistent Volume can be mounted by Pods.
+
+Common access modes are:
+
+- ***ReadWriteOnce*** ***(RWO)*** <br>
+The volume can be mounted as read-write by only one node at a time.
+
+- ***ReadOnlyMany*** ***(ROX)*** <br>
+The volume can be mounted as read-only by multiple nodes.
+
+- ***ReadWriteMany*** ***(RWX)*** <br>
+The volume can be mounted as read-write by multiple nodes at the same time.
+
+---
+
+Capacity Binding between PV and PVC
+
+
+- A Persistent Volume (PV) has a fixed storage capacity (for example, 5Gi, 10Gi).
+- A Persistent Volume Claim (PVC) requests a specific amount of storage.
+- Kubernetes binds a PVC to a PV only if:
+- The PV capacity is greater than or equal to the requested size.
+- The PV supports the requested access mode.
+- Storage class (if used) matches.
+
+---
+
+How Binding Happens
+
+
+- When a PVC is created, Kubernetes searches for a matching PV.
+- If a suitable PV is found, it is bound one-to-one with the PVC(i.e depends upon the capacity if capacity are equal or greater than equal `And` Accesss Mode ).
+- Once bound:
+  - That PV cannot be used by any other PVC.
+  - The Pod accesses storage only through the PVC.
+
+---
+
+
+
+  
 ---
 
 ###  4️⃣ configMap Volume
@@ -2932,6 +2980,7 @@ kubectl create secret docker-registry mydockersecret \
 #  Screenshot's
 
 - [For Script's](#example-31)
+  
 ## Create a hostPath Volume  `hostpath.yml`
 
 
@@ -3268,6 +3317,7 @@ kubectl create secret docker-registry mydockersecret \
 ---
 ---
 
+##    create a volume persistentVolumeClaim (PVC) / PersistentVolume (PV) 
 
 
 
@@ -3286,23 +3336,168 @@ kubectl create secret docker-registry mydockersecret \
 
 
 
+---
+---
+---
+
+
+<a id="example-33"></a>
+
+
+#  Jobs & Cronjobs  
+
+ - [Example or say practicess Schreenshots](#example-32)
 
 
 
+###  🔹 Kubernetes Job
+
+
+What is a Job?
+
+A Job in Kubernetes is used to run a task once or a fixed number of times and ensure it successfully completes.
+
+- It creates one or more Pods
+- Retries automatically if a Pod fails
+- Stops once the task is completed
+
+Use cases
+
+- Database migration
+- Backup task
+- Report generation
+- One-time scripts
+
+---
+
+###   🔹 Kubernetes CronJob
+
+What is a CronJob?
+
+A CronJob runs Jobs on a schedule, just like Linux cron.
+- Executes Jobs at a specific time or interval
+- Useful for recurring tasks
+
+
+Use cases
+
+- Daily backups
+- Log cleanup
+- Periodic health checks
+- Scheduled reports
+
+---
+
+###   🔹 Difference (Conceptual)
+
+- Job → Runs once or until completion
+- CronJob → Runs Jobs repeatedly on a schedule
+
+---
+
+##  🔹 Important Job Terms
+
+
+###  1️⃣ Completions
+
+
+What it means:<br>
+Number of successful Pod executions required for the Job to be considered complete.
+- If `completions: 1` → Job finishes after 1 successful Pod
+- If `completions: 5` → Job finishes after 5 successful Pods
+Example meaning:<br>
+“Run this task successfully 5 times.”
+
+
+###    2️⃣ Parallelism
+
+What it means:<br>
+Number of Pods that can run at the same time.
+- Controls concurrency
+- Helps finish Jobs faster
+Example meaning:<br>
+“Run 2 Pods at the same time.”
+
+---
+
+###  🔹 How Completions & Parallelism Work Together
+
+- ***Completions*** = How many times the task must succeed
+- ***Parallelism*** = How many Pods can run simultaneously
+Simple Example
+- `completions: 6`
+- `parallelism: 2`
+
+➡️ Kubernetes will run 2 Pods at a time<br>
+➡️ Total 6 successful runs needed<br>
+➡️ Job completes after all succeed
+
+---
+
+🧩 Kubernetes Job & CronJob  Flowchart
+
+```code
+┌───────────────────────────┐        ┌────────────────────────────────┐
+│           JOB             │        │            CRONJOB             │
+├───────────────────────────┤        ├────────────────────────────────┤
+│                           │        │                                │
+│   Job Created             │        │   Cron Schedule (Time)         │
+│        ↓                  │        │        ↓                       │
+│   Pod Created             │        │   Job Created                  │
+│        ↓                  │        │        ↓                       │
+│   Task Executed           │        │   Pod Created                  │
+│        ↓                  │        │        ↓                       │
+│   Task Completed ?        │        │   Task Executed                │
+│     ├─ No → Retry Pod     │        │        ↓                       │
+│     └─ Yes                │        │   Task Completed               │
+│        ↓                  │        │        ↓                       │
+│   Job Completed           │        │   Pod Deleted                  │
+│        ↓                  │        │        ↓                       │
+│   Pod Deleted             │        │   Wait for Next Schedule       │
+│        ↓                  │        │        ↓                       │
+│       END                 │        │   Repeat Cycle                 │
+│                           │        │                                │
+└───────────────────────────┘        └────────────────────────────────┘
+
+```
+
+🔁 Job vs CronJob (One-Line Visual Logic)
+
+```code
+Job      : Create → Run Task → Delete (ONE TIME)
+
+CronJob  : Create → Run → Delete
+           ↓
+         Wait
+           ↓
+         Create → Run → Delete (REPEATED)
+```
+
+🔑 Key Idea (Job)
+
+- A Job runs only once in Kubernetes.
+- It creates a Pod to perform a specific task.
+- After the task is completed, the Pod is terminated.
+- If the task fails, the Job retries by creating a new Pod until it succeeds (based on restart policy).
+
+
+⏰ Key Idea (CronJob)
+
+- A CronJob is a Job with a time schedule.
+- It creates a new Job at every scheduled time.
+- Each Job creates its own new Pod to run the task.
+- Old Pods finish and exit, and new Pods are created for the next schedule.
 
 
 
+---
+---
 
 
+<a id="example-32"></a>
 
 
-
-
-
-
-
-
-
+#  Screenshot's
 
 
 
