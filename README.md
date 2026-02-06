@@ -3417,12 +3417,12 @@ kubectl create secret docker-registry mydockersecret \
 
 
 <p align="center">
-  <img src="" width="500" alt="Initialize Repository Screenshot">
+  <img src="https://github.com/nikiimisal/Concepts_And_Examples-of-K8S/blob/main/img/Screenshot%202026-02-06%20223628.png?raw=true" width="500" alt="Initialize Repository Screenshot">
 </p>
 
 
 <p align="center">
-  <img src="" width="500" alt="Initialize Repository Screenshot">
+  <img src="https://github.com/nikiimisal/Concepts_And_Examples-of-K8S/blob/main/img/Screenshot%202026-02-06%20223721.png?raw=true" width="500" alt="Initialize Repository Screenshot">
 </p>
 
 
@@ -3695,12 +3695,12 @@ spec:                             # CronJob specification
 
 
 <p align="center">
-  <img src="" width="500" alt="Initialize Repository Screenshot">
+  <img src="https://github.com/nikiimisal/Concepts_And_Examples-of-K8S/blob/main/img/Screenshot%202026-02-06%20231115.png?raw=true" width="500" alt="Initialize Repository Screenshot">
 </p>
 
 
 <p align="center">
-  <img src="" width="500" alt="Initialize Repository Screenshot">
+  <img src="https://github.com/nikiimisal/Concepts_And_Examples-of-K8S/blob/main/img/Screenshot%202026-02-06%20231303.png?raw=true" width="500" alt="Initialize Repository Screenshot">
 </p>
 
 
