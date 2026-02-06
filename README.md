@@ -604,7 +604,7 @@ ls <mount-path>
 
 # ---------- CONFIGMAP (VOLUME SOURCE) ----------
 
-kubectl create configmap mysqlconfig --from-literal=mysql_root_password=root
+kubectl create configmap mysqlconfig --from-literal=MYSQL_ROOT_PASSWORD=root
 # Create ConfigMap from key-value
 
 kubectl create configmap appconfig --from-file=config.txt
@@ -2742,7 +2742,93 @@ spec:                                   # Specification of the Deployment
               key: MYSQL_ROOT_PASSWORD  # Key inside ConfigMap whose value will be injected
 ```
 
+`nginxconfig.yml`
 
+```yaml
+apiVersion: apps/v1                     # Kubernetes API version for Deployment object
+kind: Deployment                        # Resource type is Deployment
+
+metadata:                               # Metadata section (name, labels, etc.)
+  name: mydeploy                        # Name of the Deployment
+
+spec:                                   # Specification of the Deployment
+  replicas: 3                           # Number of pod replicas to run
+
+  selector:                             # Selector to identify which Pods belong to this Deployment
+    matchLabels:                        # Match Pods having these labels
+      app: myapp                        # Label key-value used to select Pods
+
+  template:                             # Pod template (defines how Pods are created)
+    metadata:                           # Metadata for Pods
+      labels:                           # Labels applied to Pods
+        app: myapp                      # Label used for selection and Service mapping
+
+    spec:                               # Pod specification
+      containers:                       # List of containers inside the Pod
+      - name: mycontainer               # Name of the container
+        image: mysql                    # Docker image used (MySQL image)
+
+        ports:                          # Ports exposed by the container
+        - containerPort: 80             # Container listens on port 80
+
+        volumeMounts:                   # Mount volumes inside the container
+        - name: myvolume                # Volume name (must match volumes section)
+          mountPath: /etc/nginx/conf.d/default.conf  
+                                        # Path inside the container where file is mounted
+          subPath: default.conf          # Mount only this file, not the entire ConfigMap
+
+      volumes:                          # Volumes available to the Pod
+      - name: myvolume                  # Name of the volume
+        configMap:                      # Volume type is ConfigMap
+          name: nginxconfig             # ConfigMap name containing default.conf
+```
+
+
+5️⃣ Secret Environment Variable `mygenericsecretpod.yml`
+
+
+
+```yaml
+apiVersion: apps/v1                     # Kubernetes API version for Deployment object
+kind: Deployment                        # Resource type is Deployment
+
+metadata:                               # Metadata section
+  name: mydeploy                        # Name of the Deployment
+
+spec:                                   # Deployment specification
+  replicas: 3                           # Number of Pod replicas to run
+
+  selector:                             # Selector to match Pods with Deployment
+    matchLabels:                        # Matching labels
+      app: myapp                        # Label used to identify Pods
+
+  template:                             # Pod template
+    metadata:                           # Pod metadata
+      labels:                           # Labels applied to Pods
+        app: myapp                      # Same label as selector
+
+    spec:                               # Pod specification
+      containers:                       # List of containers inside the Pod
+      - name: mycontainer               # Name of the container
+        image: mysql                    # MySQL Docker image
+
+        env:                            # Environment variables for the container
+        - name: MYSQL_ROOT_PASSWORD     # Environment variable required by MySQL
+          valueFrom:                    # Value is fetched from an external source
+            secretKeyRef:               # Reference to a Kubernetes Secret
+              name: mysecret            # Name of the Secret
+              key: MYSQL_ROOT_PASSWORD  # Key inside the Secret whose value is injected
+```
+
+`Docker-regestry-secrete`
+
+```yaml
+kubectl create secret docker-registry mydockersecret \
+  --docker-server=https://index.docker.io/v1/ \
+  --docker-username=<your-username> \
+  --docker-password=<token> \
+  --docker-email=<your-email>
+ ```
 
 
 ---
@@ -2822,7 +2908,7 @@ spec:
 
 ---
 
-- Create a NFS Volume `nfs.yml`
+## Create a NFS Volume `nfs.yml`
   
 📦 NFS (EFS) Practical Setup 
 
@@ -2869,9 +2955,154 @@ spec:
 
 ---
 
--  Create a configMap Volume `configmap.yml`
+###  Create a configMap Volume `configmap.yml`
 
-  
+  - Created ConfigMap using kubectl command
+    - `kubectl create configmap mysqlconfig --from-literal=MYSQL_ROOT_PASSWORD=root`
+    - `mysqlconfig`→ Name of the ConfigMap  , `--from-literal`→ Used to directly define key-value data from the command line  ,<br>
+       `MYSQL_ROOT_PASSWORD`→ Key name (environment variable required by MySQL container)<br>
+       `root`→ Value assigned to the key
+   - This ConfigMap stores the MySQL root password securely outside the Pod
+   - The ConfigMap value is later injected into the Pod as an environment variable
+
+
+<p align="center">
+  <img src="" width="500" alt="Initialize Repository Screenshot">
+</p>
+
+<p align="center">
+  <img src="" width="500" alt="Initialize Repository Screenshot">
+</p>
+
+
+
+---
+
+📌 Nginx ConfigMap Creation & Verification
+
+- Created a basic Nginx Pod using `pod.yml`.
+- Entered the running Pod using kubectl exec.
+- Navigated to /etc/nginx/conf.d/ inside the container.
+- Verified the default default.conf used by Nginx.
+- Exited the Pod and copied / recreated default.conf on the master node.
+- Created a ConfigMap named `nginxconfig` using:
+- `kubectl create configmap nginxconfig --from-file=default.conf`
+   - `nginxconfig` → Name of the ConfigMap
+   - `--from-file` → Used to create ConfigMap data from a file
+   - `default.conf` → File name becomes the key in the ConfigMap
+   - `File content` → Stored as the value of that key
+- Verified ConfigMap creation using kubectl get configmap.
+- Checked ConfigMap content using kubectl describe configmap nginxconfig.
+- Confirmed that Nginx configuration file is successfully stored inside the ConfigMap.
+- This ConfigMap can now be mounted into Pods to override Nginx configuration without rebuilding the image.
+
+
+>Now that we have created the ConfigMap, the next step is to use it by attaching it to the Pod.  or say<br>
+After creating the ConfigMap, the next step is to consume it inside the Pod.
+
+
+<p align="center">
+  <img src="" width="500" alt="Initialize Repository Screenshot">
+</p>
+
+
+
+📌 ConfigMap Usage Verification
+
+- Created a Deployment using nginxconfig.yml.
+- Deployment mydeploy was created successfully.
+- Kubernetes created 3 Pods automatically via ReplicaSet.
+- All Pods are in Running state.
+- ConfigMap nginxconfig is attached to the Pods as a volume.
+- The file default.conf from ConfigMap is mounted inside the container.
+- Mount path used:
+`/etc/nginx/conf.d/default.conf`
+- Verified using:
+  ```
+  kubectl describe pod <pod-name>
+  ```
+
+- Volume type shown as ConfigMap in Pod details.
+- This confirms:
+  - Nginx configuration is coming from ConfigMap.
+  - Same configuration is shared across all Pods.
+- Any change in ConfigMap will update configuration inside Pods (after reload/restart).
+
+
+
+<p align="center">
+  <img src="" width="500" alt="Initialize Repository Screenshot">
+</p>
+
+
+
+---
+---
+
+##  Secret Volume  
+
+###   generic secret 
+
+ 📌 Kubernetes Secret Creation
+
+-  Created a Secret named mysecret using kubectl command.
+- Used `--from-literal` to store sensitive data directly as key-value.
+- Stored ***MYSQL_ROOT_PASSWORD=root*** inside the Secret.
+- Verified Secret creation using `kubectl get secret`.
+- Viewed Secret details using `kubectl describe secret mysecret`.
+- Confirmed Secret type as ***Opaque*** (generic Secret).
+- Checked Secret content in YAML format using `kubectl get secret -o yaml`.
+- Observed that the value is Base64 encoded (`cm9vdA==`).
+- This Secret securely stores sensitive data outside the Pod.
+- Too see the encodedcode go to browser and encoded there
+
+>Drawback: At present, even though the password is stored in encrypted (Base64) format, it becomes<br>
+>easily readable once accessed. To improve security, Secret volumes will be used in future<br>
+>implementations so that sensitive data can be handled more securely during application development.
+
+<p align="center">
+  <img src="" width="500" alt="Initialize Repository Screenshot">
+</p>
+
+<p align="center">
+  <img src="" width="500" alt="Initialize Repository Screenshot">
+</p>
+
+`Concept`: From this point onward, Pods must be created using a Pod definition file. If the root password is<br>
+updated (for example, changed in the Secret), the change should automatically reflect in all Pods without recreating them manually.
+
+Therefore, we need to write a Pod definition file to use the Secret properly and ensure that any password change is reflected across all Pods automatically.
+
+📌 Secret Usage Verification (Environment Variable)
+
+- Created a Kubernetes Secret named `mysecret` containing `MYSQL_ROOT_PASSWORD`.
+- Wrote a Pod/Deployment YAML file that references the Secret.
+- Applied the file using `kubectl apply -f mygenericsecretpod.yml`.
+- Kubernetes created a Deployment with 3 Pods automatically.
+- Verified Pods using `kubectl get pods`.
+- Used `kubectl describe pod <pod-name>` to inspect Pod details.
+- Confirmed that:
+  - `MYSQL_ROOT_PASSWORD` is injected into the container
+  - Value is sourced from Secret `mysecret`
+  - Password is not hardcoded in the Pod YAML
+- All Pods receive the same password from the Secret.
+- If the Secret value is updated and Pods are restarted, all Pods get the new password automatically.
+
+✅ Conclusion:<br>
+Secrets provide a secure and centralized way to manage sensitive data like passwords, ensuring consistency across all Pods.
+
+
+
+
+<p align="center">
+  <img src="" width="500" alt="Initialize Repository Screenshot">
+</p>
+
+
+
+
+
+
 
 
 ---
