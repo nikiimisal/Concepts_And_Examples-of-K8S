@@ -2703,6 +2703,10 @@ volumes:
 
 ---
 
+
+<a id="example-31"></a>
+
+
 ## Scripts
 
  2️⃣ hostPath Volume  `hostpath.yml`
@@ -2901,7 +2905,7 @@ kubectl create secret docker-registry mydockersecret \
 
 #  Screenshot's
 
-
+- [For Script's](#example=31)
 
 ## Create a hostPath Volume  `hostpath.yml`
 
@@ -3196,22 +3200,23 @@ kubectl create secret docker-registry mydockersecret \
 
 | **Browser**    | ****          | ****          | ****          |
 |--------------------------------|------------------------------------|------------------------------------|------------------------------------|
-| ![VS]() | ![AWS]() | ![AWS]() | ![AWS]() |
+| ![VS](https://github.com/nikiimisal/Concepts_And_Examples-of-K8S/blob/main/img/Screenshot%202026-02-06%20124438.png?raw=true) | ![AWS](https://github.com/nikiimisal/Concepts_And_Examples-of-K8S/blob/main/img/Screenshot%202026-02-06%20124455.png?raw=true) | ![AWS](https://github.com/nikiimisal/Concepts_And_Examples-of-K8S/blob/main/img/Screenshot%202026-02-06%20124554.png?raw=true) | ![AWS](https://github.com/nikiimisal/Concepts_And_Examples-of-K8S/blob/main/img/Screenshot%202026-02-06%20124816.png?raw=true) |
 
 
 
 
 | **Terminal**    | ****          |
 |--------------------------------|------------------------------------|
-| ![VS]() | ![AWS]() | 
+| ![VS](https://github.com/nikiimisal/Concepts_And_Examples-of-K8S/blob/main/img/Screenshot%202026-02-06%20125518.png?raw=true) | ![AWS](https://github.com/nikiimisal/Concepts_And_Examples-of-K8S/blob/main/img/Screenshot%202026-02-06%20125330.png?raw=true) | 
 
 
 <p align="center">
-  <img src="" width="500" alt="Initialize Repository Screenshot">
+  <img src="https://github.com/nikiimisal/Concepts_And_Examples-of-K8S/blob/main/img/Screenshot%202026-02-06%20125400.png?raw=true" width="500" alt="Initialize Repository Screenshot">
 </p>
 
 
 
+---
 
 
 
@@ -3223,9 +3228,17 @@ kubectl create secret docker-registry mydockersecret \
 
 
 
-###   TLS Secret
+
+##   TLS Secret
 
 
+📌 TLS Secret
+
+- What it is: Stores SSL/TLS certificates and keys securely for Kubernetes workloads.
+- Use case: Used by applications needing HTTPS/secure communication (like Ingress or web servers).
+- Current status: Practical implementation not done yet because certificates are not available.
+- Future use: Can be added later when the certificates/keys are ready.
+- Key point: Exists as long as the Pod that consumes it exists.
 
 ---
 ---
