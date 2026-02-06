@@ -2842,7 +2842,7 @@ kubectl create secret docker-registry mydockersecret \
 
 
 
--  Create a hostPath Volume  `hostpath.yml`
+## Create a hostPath Volume  `hostpath.yml`
 
 
 
