@@ -2594,6 +2594,67 @@ volumes:
 ```
 
 ---
+🔑 Types of Secrets
+
+---
+
+1️. Generic Secret
+
+
+Definition
+
+-  Generic Secret is used to store arbitrary sensitive data such as passwords, tokens, and keys.
+
+Key Points
+
+- Most commonly used Secret type.
+- Can store multiple key–value pairs.
+- Used by applications for:
+  - Database credentials
+  - API tokens
+  - Application secrets 
+
+---
+
+2️. Docker Registry Secret
+
+Definition
+
+- Docker Registry Secret stores authentication information required to pull images from private container registries.
+
+Key Points
+
+- Used when images are not publicly accessible.
+- Contains registry credentials securely.
+- Referenced during image pull, not during runtime.
+
+---
+
+3️. TLS Secret
+
+Definition
+
+- TLS Secret stores cryptographic certificates and private keys.
+
+Key Points
+
+- Used for enabling secure (HTTPS) communication.
+- Commonly associated with Ingress controllers.
+- Contains certificate and private key data.
+
+
+
+| Secret Type     | Purpose              | Typical Usage        |
+| --------------- | -------------------- | -------------------- |
+| Generic         | Store sensitive data | DB passwords, tokens |
+| Docker Registry | Image authentication | Private image pull   |
+| TLS             | Secure communication | HTTPS, SSL           |
+
+
+
+---
+---
+
 
 ###   6️⃣ nfs Volume
 
@@ -2955,7 +3016,7 @@ spec:
 
 ---
 
-###  Create a configMap Volume `configmap.yml`
+##  Create a configMap Volume `configmap.yml`
 
   - Created ConfigMap using kubectl command
     - `kubectl create configmap mysqlconfig --from-literal=MYSQL_ROOT_PASSWORD=root`
@@ -2967,11 +3028,11 @@ spec:
 
 
 <p align="center">
-  <img src="" width="500" alt="Initialize Repository Screenshot">
+  <img src="https://github.com/nikiimisal/Concepts_And_Examples-of-K8S/blob/main/img/Screenshot%202026-02-06%20095146.png?raw=true" width="500" alt="Initialize Repository Screenshot">
 </p>
 
 <p align="center">
-  <img src="" width="500" alt="Initialize Repository Screenshot">
+  <img src="https://github.com/nikiimisal/Concepts_And_Examples-of-K8S/blob/main/img/Screenshot%202026-02-06%20095236.png?raw=true" width="500" alt="Initialize Repository Screenshot">
 </p>
 
 
@@ -3002,7 +3063,7 @@ After creating the ConfigMap, the next step is to consume it inside the Pod.
 
 
 <p align="center">
-  <img src="" width="500" alt="Initialize Repository Screenshot">
+  <img src="https://github.com/nikiimisal/Concepts_And_Examples-of-K8S/blob/main/img/Screenshot%202026-02-06%20105402.png?raw=true" width="500" alt="Initialize Repository Screenshot">
 </p>
 
 
@@ -3031,7 +3092,11 @@ After creating the ConfigMap, the next step is to consume it inside the Pod.
 
 
 <p align="center">
-  <img src="" width="500" alt="Initialize Repository Screenshot">
+  <img src="https://github.com/nikiimisal/Concepts_And_Examples-of-K8S/blob/main/img/Screenshot%202026-02-06%20105421.png?raw=true" width="500" alt="Initialize Repository Screenshot">
+</p>
+
+<p align="center">
+  <img src="https://github.com/nikiimisal/Concepts_And_Examples-of-K8S/blob/main/img/Screenshot%202026-02-06%20105529.png?raw=true" width="500" alt="Initialize Repository Screenshot">
 </p>
 
 
@@ -3039,7 +3104,7 @@ After creating the ConfigMap, the next step is to consume it inside the Pod.
 ---
 ---
 
-##  Secret Volume  
+##  Create a Secret Volume  
 
 ###   generic secret 
 
@@ -3061,11 +3126,11 @@ After creating the ConfigMap, the next step is to consume it inside the Pod.
 >implementations so that sensitive data can be handled more securely during application development.
 
 <p align="center">
-  <img src="" width="500" alt="Initialize Repository Screenshot">
+  <img src="https://github.com/nikiimisal/Concepts_And_Examples-of-K8S/blob/main/img/Screenshot%202026-02-06%20120802.png?raw=true" width="500" alt="Initialize Repository Screenshot">
 </p>
 
 <p align="center">
-  <img src="" width="500" alt="Initialize Repository Screenshot">
+  <img src="https://github.com/nikiimisal/Concepts_And_Examples-of-K8S/blob/main/img/Screenshot%202026-02-06%20110508.png?raw=true" width="500" alt="Initialize Repository Screenshot">
 </p>
 
 `Concept`: From this point onward, Pods must be created using a Pod definition file. If the root password is<br>
@@ -3095,6 +3160,53 @@ Secrets provide a secure and centralized way to manage sensitive data like passw
 
 
 <p align="center">
+  <img src="https://github.com/nikiimisal/Concepts_And_Examples-of-K8S/blob/main/img/Screenshot%202026-02-06%20120938.png?raw=true" width="500" alt="Initialize Repository Screenshot">
+</p>
+
+
+---
+
+###  Docker Regestry-Secret
+
+
+📌 Docker Registry Secret Verification
+
+- Created a Docker Registry secret to allow Kubernetes to pull private Docker images.
+  
+Command used:
+```yaml
+kubectl create secret docker-registry mydockersecret \
+  --docker-server=https://index.docker.io/v1/ \
+  --docker-username=<your-username> \
+  --docker-password=<your-docker-pat> \
+  --docker-email=<your-email>
+```
+
+- Verified secret creation using:
+- `kubectl get secret` → Lists all secrets.
+- `kubectl get secret -o yaml` → Shows detailed YAML of all secrets.
+- `kubectl get secret mydockersecret -o yaml` → Shows detailed info for the specific secret.
+
+- Secret type: `kubernetes.io/dockerconfigjson` → Used specifically for Docker Registry authentication.
+- Data stored inside: Encoded `.dockerconfigjson` containing username, password/token, email, and auth info.
+- Use case: Allows Pods to pull images from private Docker registries without exposing credentials in plain text.
+
+
+
+
+| **Browser**    | ****          | ****          | ****          |
+|--------------------------------|------------------------------------|------------------------------------|------------------------------------|
+| ![VS]() | ![AWS]() | ![AWS]() | ![AWS]() |
+
+
+
+
+| **Terminal**    | ****          |
+|--------------------------------|------------------------------------|
+| ![VS]() | ![AWS]() | 
+
+
+<p align="center">
   <img src="" width="500" alt="Initialize Repository Screenshot">
 </p>
 
@@ -3102,6 +3214,16 @@ Secrets provide a secure and centralized way to manage sensitive data like passw
 
 
 
+
+
+
+
+
+
+
+
+
+###   TLS Secret
 
 
 
