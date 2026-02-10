@@ -2775,6 +2775,44 @@ volumes:
 | **Use in Pods**   | Mounted as files or environment variables                      | Mounted as files or environment variables                           |
 |  master           
 
+
+
+
+
+
+
+- StatefulSet vs Deployment
+
+
+
+
+| Feature      | StatefulSet           | Deployment |
+| ------------ | --------------------- | ---------- |
+| Pod name     | Fixed                 | Random     |
+| Storage      | Dedicated PVC per pod | Optional   |
+| Data safety  | High                  | Low        |
+| Pod identity | Stable                | Unstable   |
+| Use case     | Databases             | Web apps   |
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 ---
 
 
@@ -3706,4 +3744,252 @@ spec:                             # CronJob specification
 
 ---
 ---
+
+
+#   StatefulSet
+
+
+
+###    What is a StatefulSet?
+
+
+A StatefulSet is a Kubernetes workload used to run stateful applications.
+
+It is used when an application needs:
+
+- Fixed pod name
+- Persistent data
+- Stable identity
+- Ordered pod creation
+
+Unlike Deployment, a StatefulSet keeps the same pod name, storage, and identity, even after pod restart.
+
+---
+
+###  Why StatefulSet is Needed
+
+Deployment pods are stateless and get random names.<br>
+For databases and distributed systems, this causes problems.
+
+StatefulSet solves this by providing:
+
+- Stable pod identity
+- Dedicated storage per pod
+- Safe scaling
+
+---
+
+###   Key Features of StatefulSet
+
+1. Stable Pod Names
+
+Pods have fixed names:
+```
+app-0, app-1, app-2
+```
+If a pod restarts, it comes back with the same name.
+
+---
+2. Stable Pod Identity
+
+Each pod keeps:<br>
+- Same name
+- Same hostname
+- Same DNS entry<br>
+Identity does not change across restarts.
+
+---
+
+3. Persistent Storage (PV & PVC)
+
+- Each pod gets its own PVC
+- PVC is not deleted when the pod is deleted
+- Same PVC is reused when the pod restarts<br>
+This ensures data persistence.
+
+---
+
+4. Data Safety
+
+Because the same volume is reattached:<br>
+- Data remains safe
+- No data loss on restart
+
+---
+5. Stable Network Identity
+
+- Pod IP may change
+- DNS name remains the same<br>
+Applications communicate using DNS, not IP.
+
+---
+6. Ordered Pod Creation and Deletion
+
+- Pods are created in order: `app-0 → app-1 → app-2`
+- Pods are deleted in reverse order<br>
+Useful for clustered systems.
+
+---
+
+##   Data Sharding with StatefulSet
+
+###  What is Data Sharding?
+
+***Data sharding*** is a technique where a large dataset is split into smaller, independent parts (shards) and distributed across multiple pods or nodes.
+
+Each shard holds only a portion of the total data, which improves:
+
+- Scalability
+- Performance
+- Availability
+
+---
+
+###  Why StatefulSet is Used for Data Sharding
+
+StatefulSet is ideal for sharding because each pod has a fixed identity and dedicated storage.<br>
+**Key reasons**:
+- Each pod has a stable name (`app-0`, `app-1`, etc.)
+- Each pod has a dedicated PVC
+- Pod identity remains constant across restarts<br>
+This allows applications to assign a specific data shard to a specific pod.
+
+
+---
+
+###  Simple Example: Data Sharding using StatefulSet
+
+Scenario
+
+Assume Instagram stores user posts data.<br>
+As data grows every year, storing everything in one pod is not practical.
+
+So, Instagram splits data by year → this is data sharding.
+
+---
+
+Step 1: Shard-to-Pod Mapping (Year-wise Data)
+
+Each pod stores data for one year.
+```
+insta-0 → Posts from 2023
+insta-1 → Posts from 2024
+insta-2 → Posts from 2025
+```
+Because StatefulSet pod names are fixed:<br>
+- `insta-1` will always store 2024 data
+- Mapping never breaks
+
+---
+
+Step 2: Dedicated Storage per Shard
+
+Each pod has its own PVC.
+```
+PVC-insta-0 → 2023 data
+PVC-insta-1 → 2024 data
+PVC-insta-2 → 2025 data
+```
+
+If `insta-1` restarts:<br>
+- Same PVC is reattached
+- 2024 data remains safe<br>
+No data mixing between years.
+
+---
+
+Step 3: Predictable Network Identity
+
+Each year’s data is reachable using a fixed DNS name.<br>
+Example:
+```
+insta-2.insta.default.svc.cluster.local
+```
+Meaning:<br>
+- App knows → this pod serves 2025 posts
+- No need to track changing IPs
+
+---
+
+Step 4: Ordered Scaling (Adding New Year Data)
+
+In 2026, more data comes in.
+
+Scale StatefulSet:
+```
+3 → 4 replicas
+```
+New Pod:
+```
+insta-3 → 2026 data
+```
+Because pods are created in order:<br>
+- Shard assignment is clean
+- No data conflict
+
+---
+
+###  How This Is Horizontal Sharding
+
+- Each pod stores only part of total data
+- Total storage grows by adding more pods
+- System scales smoothly year by year
+
+---
+
+###  Why StatefulSet is Perfect Here
+
+- Pod names are stable → shard ownership fixed
+- PVC per pod → data never lost
+- DNS is stable → easy access
+- Ordered scaling → safe shard expansion
+
+---
+
+What Remains Constant in StatefulSet
+
+| Component    | Behavior   |
+| ------------ | ---------- |
+| Pod name     | Constant   |
+| Pod identity | Constant   |
+| PVC          | Constant   |
+| Data         | Constant   |
+| DNS name     | Constant   |
+| Pod IP       | May change |
+
+
+
+---
+
+###  When to Use StatefulSet
+
+Use StatefulSet when:<br>
+- Application stores data
+- Each pod needs unique identity
+- Data must survive pod restarts
+- Pod order matters
+
+Common Use Cases<br>
+- MySQL / PostgreSQL
+- MongoDB
+- Kafka
+- ZooKeeper
+- Elasticsearch
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
