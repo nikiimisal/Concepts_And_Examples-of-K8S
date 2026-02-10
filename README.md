@@ -4170,13 +4170,13 @@ spec:                                  # Specification of the StatefulSet
 
 | **Create data folder(node) & .yml files (master)**    | **Create service & stsateful`.yml` files**          |
 |--------------------------------|------------------------------------|
-| ![VS]() | ![AWS]() |
+| ![VS](https://github.com/nikiimisal/Concepts_And_Examples-of-K8S/blob/main/img/Screenshot%202026-02-10%20201943.png?raw=true) | ![AWS](https://github.com/nikiimisal/Concepts_And_Examples-of-K8S/blob/main/img/Screenshot%202026-02-10%20202018.png?raw=true) |
 
 
   
 | **Apply Stateful file and see the creations**    | **See the bounding**          |
 |--------------------------------|------------------------------------|
-| ![VS]() | ![AWS]() | 
+| ![VS](https://github.com/nikiimisal/Concepts_And_Examples-of-K8S/blob/main/img/Screenshot%202026-02-10%20202059.png?raw=true) | ![AWS](https://github.com/nikiimisal/Concepts_And_Examples-of-K8S/blob/main/img/Screenshot%202026-02-10%20202132.png?raw=true) | 
 
 
 
@@ -4184,7 +4184,7 @@ spec:                                  # Specification of the StatefulSet
 - When data is written on the master, all the data gets stored on the node’s volume.
   
 <p align="center">
-  <img src="" width="500" alt="Initialize Repository Screenshot">
+  <img src="https://github.com/nikiimisal/Concepts_And_Examples-of-K8S/blob/main/img/Screenshot%202026-02-10%20202219.png?raw=true" width="500" alt="Initialize Repository Screenshot">
 </p>
 
 
@@ -4193,7 +4193,7 @@ spec:                                  # Specification of the StatefulSet
 - Delete all services,files,volumes
   
 <p align="center">
-  <img src="" width="500" alt="Initialize Repository Screenshot">
+  <img src="https://github.com/nikiimisal/Concepts_And_Examples-of-K8S/blob/main/img/Screenshot%202026-02-10%20202328.png?raw=true" width="500" alt="Initialize Repository Screenshot">
 </p>
 
 
