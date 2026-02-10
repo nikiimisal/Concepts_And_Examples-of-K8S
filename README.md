@@ -3990,6 +3990,390 @@ Common Use Cases<br>
 
 
 
+---
+
+
+
+
+#   DaemonSet
+
+
+###   What is a DaemonSet?
+
+
+A DaemonSet is a Kubernetes workload that makes sure one Pod runs on every node in the cluster.
+
+If a new node is added, Kubernetes automatically starts the Pod on that node.<br>
+If a node is removed, the Pod is automatically removed.
+
+
+---
+
+###   Why DaemonSet is Needed
+
+Some services must run on each node, not per application.
+
+Example needs:<br>
+- Collect logs from the node
+- Monitor node CPU, memory, disk
+- Handle networking on the node
+Deployment cannot guarantee this, but DaemonSet can.
+
+---
+
+###   How DaemonSet Works
+
+- Kubernetes checks all nodes
+- Ensures exactly one Pod per node
+- No replica count is required
+- Scaling happens automatically with nodes
+
+
+---
+
+##  Key Characteristics
+
+1. One Pod Per Node
+
+Each node runs one and only one Pod from the DaemonSet.
+
+---
+
+2. Automatic Node Awareness
+
+- New node added → Pod created
+- Node removed → Pod deleted
+
+No manual action needed.
+
+---
+
+3. Node-Level Service
+
+DaemonSet Pods:
+
+- Access node resources
+- Work at OS / node level
+- Support applications running on the node
+
+---
+
+4. Runs Before Applications
+
+DaemonSet Pods usually start before application pods, so services like logging and networking are ready.
+
+---
+
+5. Optional Control-Plane Support
+
+DaemonSet Pods can also run on master/control-plane nodes using tolerations.
+
+---
+
+Common Use Cases
+
+| Purpose        | Example Tool            |
+| -------------- | ----------------------- |
+| Log collection | Fluentd, Filebeat       |
+| Monitoring     | Node Exporter           |
+| Networking     | Calico, Cilium          |
+| Security       | Falco, antivirus agents |
+
+---
+
+DaemonSet vs Other Workloads
+
+| Feature          | DaemonSet     | Deployment    | StatefulSet   |
+| ---------------- | ------------- | ------------- | ------------- |
+| One pod per node | Yes           | No            | No            |
+| Pod identity     | Node-based    | Random        | Fixed         |
+| Scaling          | Node count    | Replica count | Replica count |
+| Storage focus    | No            | Optional      | Yes           |
+| Main use         | Node services | Web apps      | Databases     |
+
+
+---
+
+###  Simple Real-World Example
+
+Instagram runs Kubernetes on 100 nodes.
+
+It uses a DaemonSet for log collection:<br>
+- Every node runs one log agent
+- Logs from all pods on that node are collected
+- New node → logs start automatically
+
+
+
+
+
+---
+
+
+
+#  Kubernetes Networking
+
+
+###   What is Kubernetes Networking?
+
+
+Kubernetes networking defines how Pods, Services, and external users communicate with each other inside <br>
+and outside the cluster.
+
+Kubernetes follows a flat networking model, meaning:<br>
+- Every Pod can communicate with every other Pod
+- No NAT is required between Pods
+
+---
+
+###   Core Networking Rules in Kubernetes
+
+Kubernetes networking is based on three main rules:
+
+1. All Pods can communicate with all Pods (across nodes)<br>
+2. All Nodes can communicate with all Pods<br>
+3. Pods see their own IP address (no port mapping)<br>
+
+
+---
+
+###   Pod Networking
+
+***Pod IP***
+- Each Pod gets one unique IP address
+- Pod IP is internal to the cluster
+- Pod IP can change when Pod restarts
+
+Example:
+```
+Pod A → 10.244.1.5
+Pod B → 10.244.2.7
+```
+Pods communicate directly using Pod IPs.
+
+---
+
+###  Container Networking Inside a Pod
+
+
+- All containers in a Pod share:
+  - Same IP address
+  - Same network namespace
+  - Same ports
+- This allows containers to talk via:
+```
+localhost
+```
+
+---
+
+###  Service Networking
+
+Why Service is Needed
+
+Pod IPs are not stable.<br>
+When a Pod restarts, IP changes.
+
+A Service provides:
+
+- Stable IP
+- Stable DNS name
+- Load balancing
+
+---
+
+##  Types of Kubernetes Services
+
+[click here]()To See More...
+
+
+###  1. ClusterIP (Default)
+
+- Internal-only access
+- Used for Pod-to-Pod communication
+
+Example:
+```
+backend.default.svc.cluster.local
+```
+
+---
+
+###   2. NodePort
+
+- Exposes service on each node’s IP
+- Accessible from outside cluster
+
+Example:
+```
+<NodeIP>:30080
+```
+
+---
+
+###  3. LoadBalancer
+
+- Creates external load balancer (cloud)
+- Used in AWS, GCP, Azure
+
+Example:
+```
+EXTERNAL-IP: 52.xx.xx.xx
+```
+
+---
+
+###  4. Headless Service
+
+- No ClusterIP
+- Used with StatefulSet
+- Returns Pod DNS directly
+
+Used for:<br>
+- Databases
+- Sharded systems
+
+---
+
+###  DNS in Kubernetes
+
+Kubernetes has CoreDNS for service discovery.
+
+DNS format:
+
+```
+<service>.<namespace>.svc.cluster.local
+```
+Example:
+```
+mysql.default.svc.cluster.local
+```
+For StatefulSet:
+```
+mysql-0.mysql.default.svc.cluster.local
+```
+---
+
+##  Ingress Networking
+
+###  What is Ingress?
+
+Ingress manages external HTTP/HTTPS traffic to services.
+
+Ingress provides:<br>
+- URL-based routing
+- Host-based routing
+- SSL/TLS termination
+
+Example:
+```
+example.com/api → backend-service
+example.com/web → frontend-service
+```
+Ingress needs an Ingress Controller (Nginx, Traefik, ALB).
+
+---
+
+##  Network Policies
+
+
+###  What is NetworkPolicy?
+
+NetworkPolicy is used to control traffic between Pods.
+By default:<br>
+- All traffic is allowed
+NetworkPolicy can:<br>
+- Allow or deny traffic
+- Control ingress & egress
+Example use:<br>
+- Only frontend can talk to backend
+- Database accessible only by app pods
+
+---
+
+##  CNI (Container Network Interface)
+
+
+###  What is CNI?
+
+CNI is a plugin that implements networking in Kubernetes.
+
+Kubernetes itself does not handle networking — CNI plugins do.
+
+---
+
+###  Popular CNI Plugins
+
+| Plugin  | Use                      |
+| ------- | ------------------------ |
+| Calico  | Network policy + routing |
+| Flannel | Simple networking        |
+| Weave   | Easy setup               |
+| Cilium  | eBPF-based, advanced     |
+
+---
+
+###  How Pod-to-Pod Communication Works (High Level)
+
+1. Pod sends traffic<br>
+2. CNI routes traffic<br>
+3. Packet reaches destination Pod<br>
+4. No NAT involved
+
+This works even across nodes.
+
+---
+
+###  External Traffic Flow (Simple)
+
+```
+User → Ingress / LoadBalancer → Service → Pod
+```
+
+---
+
+###  Kubernetes Networking Components Overview
+
+
+| Component     | Purpose                |
+| ------------- | ---------------------- |
+| Pod IP        | Pod identity           |
+| Service       | Stable access          |
+| DNS           | Service discovery      |
+| Ingress       | HTTP routing           |
+| CNI           | Network implementation |
+| NetworkPolicy | Security               |
+
+
+---
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
