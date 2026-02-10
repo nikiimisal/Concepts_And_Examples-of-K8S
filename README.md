@@ -3977,15 +3977,224 @@ Common Use Cases<br>
 - Elasticsearch
 
 
+---
+
+##  Scrpit's
+
+`PV-1.yml`
+
+```yaml
+apiVersion: v1                      # API version used to create a PersistentVolume (core/v1)
+kind: PersistentVolume              # Resource type is PersistentVolume (PV)
+
+metadata:                           # Metadata section for the PV
+  name: pv-1                        # Name of the PersistentVolume (must be unique in cluster)
+
+spec:                               # Specification of the PersistentVolume
+  capacity:                         # Storage capacity details
+    storage: 1Gi                    # Total storage size is 1 Gigabyte
+
+  accessModes:                      # How the volume can be accessed
+    - ReadWriteOnce                 # Volume can be mounted as read-write by only one node
+
+  persistentVolumeReclaimPolicy: Retain   # Data will NOT be deleted after PVC is deleted
+
+  hostPath:                         # Volume type is hostPath (local node storage)
+    path: /mnt/pv1                  # Actual directory path on the node machine
+
+  nodeAffinity:                     # Restricts PV to a specific node
+    required:                       # This affinity rule is mandatory
+      nodeSelectorTerms:            # Conditions for selecting nodes
+        - matchExpressions:         # Expression-based node matching
+            - key: kubernetes.io/hostname   # Node label key to match hostname
+              operator: In          # Operator means value must be in the list
+              values:               # Allowed values for hostname
+                - node              # PV will work only on node named "node"
+```
+
+
+`pv-2.yml`
+
+```yaml
+apiVersion: v1                      # API version used for core Kubernetes resources
+kind: PersistentVolume              # Resource type is PersistentVolume (PV)
+
+metadata:                           # Metadata information of the PV
+  name: pv-2                        # Name of the PersistentVolume
+
+spec:                               # Specification of the PersistentVolume
+  capacity:                         # Defines storage capacity
+    storage: 1Gi                    # Total storage size is 1 Gigabyte
+
+  accessModes:                      # Access mode for the volume
+    - ReadWriteOnce                 # Can be mounted as read-write by only one node
+
+  persistentVolumeReclaimPolicy: Retain   # Data will remain even after PVC deletion
+
+  hostPath:                         # Using hostPath volume type (local node storage)
+    path: /mnt/pv2                  # Directory path on the node where data is stored
+
+  nodeAffinity:                     # Restricts this PV to a specific node
+    required:                       # This rule must be satisfied
+      nodeSelectorTerms:            # Node selection conditions
+        - matchExpressions:         # Expression-based matching
+            - key: kubernetes.io/hostname   # Label key representing node hostname
+              operator: In          # Node hostname must match one of the values
+              values:               # List of allowed hostnames
+                - node              # PV will be created only on the node named "node"
+```
+
+`pv-3.yml`
+
+```yaml
+apiVersion: v1                      # API version for core Kubernetes resources
+kind: PersistentVolume              # Defines this resource as a PersistentVolume (PV)
+
+metadata:                           # Metadata section of the PV
+  name: pv-3                        # Name of the PersistentVolume
+
+spec:                               # Specification details of the PV
+  capacity:                         # Storage capacity configuration
+    storage: 1Gi                    # Allocates 1 Gigabyte of storage
+
+  accessModes:                      # Access mode settings for the volume
+    - ReadWriteOnce                 # Volume can be mounted as read-write by only one node
+
+  persistentVolumeReclaimPolicy: Retain   # Data is preserved even after PVC is deleted
+
+  hostPath:                         # Specifies hostPath volume type (local node storage)
+    path: /mnt/pv3                  # Folder path on the node where data is stored
+
+  nodeAffinity:                     # Ensures PV is bound to a specific node
+    required:                       # This condition is mandatory
+      nodeSelectorTerms:            # Rules for selecting eligible nodes
+        - matchExpressions:         # Expression-based node matching logic
+            - key: kubernetes.io/hostname   # Node label key for hostname
+              operator: In          # Node hostname must match the given value
+              values:               # Allowed hostname values
+                - node              # PV will work only on the node named "node"
+```
+
+
+`service.yml`
+
+```yaml
+apiVersion: v1                 # API version for core Kubernetes resources
+kind: Service                  # Resource type is Service (used to expose Pods)
+
+metadata:                      # Metadata information of the Service
+  name: web                    # Name of the Service
+
+spec:                          # Specification of the Service
+  clusterIP: None              # Makes this a Headless Service (no virtual Cluster IP)
+
+  selector:                    # Label selector to find matching Pods
+    app: web                   # Service will select Pods with label app=web
+
+  ports:                       # Port configuration for the Service
+    - port: 80                 # Service exposes port 80
+```
+
+`statefulset.yml`
+
+```yaml
+apiVersion: apps/v1                     # API version for StatefulSet resource
+kind: StatefulSet                      # Resource type is StatefulSet (used for stateful apps)
+
+metadata:                              # Metadata of the StatefulSet
+  name: web                            # Name of the StatefulSet
+
+spec:                                  # Specification of the StatefulSet
+  serviceName: web                     # Headless Service name used for stable network identity
+
+  replicas: 3                          # Number of Pods to be created (web-0, web-1, web-2)
+
+  selector:                            # Selector to identify Pods managed by this StatefulSet
+    matchLabels:                       # Matching labels
+      app: web                         # Pods with label app=web will be managed
+
+  template:                            # Pod template used by the StatefulSet
+    metadata:                          # Metadata for Pods
+      labels:                          # Labels applied to Pods
+        app: web                       # Label app=web for Pod selection
+
+    spec:                              # Pod specification
+      nodeSelector:                    # Forces Pods to run on a specific node
+        kubernetes.io/hostname: node   # Pods will run only on node named "node"
+
+      containers:                      # List of containers inside the Pod
+        - name: app                    # Name of the container
+          image: busybox               # Lightweight BusyBox image
+          command: ["sh", "-c", "sleep 36000"]  # Keeps the container running
+
+          volumeMounts:                # Mount volumes inside the container
+            - name: data               # Volume name (must match PVC name)
+              mountPath: /data         # Path inside container where volume is mounted
+
+  volumeClaimTemplates:                # Template for creating PVCs automatically
+    - metadata:                        # Metadata for the PVC
+        name: data                     # Name of the PVC (unique per Pod)
+
+      spec:                            # PVC specification
+        accessModes: ["ReadWriteOnce"] # Volume can be mounted by only one node
+
+        resources:                     # Resource requests for PVC
+          requests:                   # Requested resources
+            storage: 1Gi               # Each Pod gets 1Gi persistent storage
+```
+
+
+---
+---
+
+##  Screenshot's
+
+###  📌 StatefulSet Practical – Persistent Storage Verification
+
+- Created three directories pv1, pv2, pv3 under `/mnt` on the worker node.
+- Updated directory permissions to allow read/write access.
+- Created three Persistent Volumes (PVs) mapped to these node directories.
+- Deployed application Pods with individual storage claims.
+- Each Pod was automatically bound to a separate Persistent Volume.
+- Verified volume binding using `kubectl get pv` and `kubectl get pvc`.
+- Executed commands inside each Pod to write unique data into `/data/info.txt`.
+- Deleted one Pod and allowed Kubernetes to recreate it.
+- After Pod recreation, the previously written data was still present.
+- Verified data directly on the worker node filesystem.
+- This confirms data persistence beyond Pod lifecycle.
+- Storage remains intact even after Pod deletion and recreation.
+- Each Pod maintains its own isolated storage directory on the node.
+
+---
+
+
+| **Create data folder(node) & .yml files (master)**    | **Create service & stsateful`.yml` files**          |
+|--------------------------------|------------------------------------|
+| ![VS]() | ![AWS]() |
+
+
+  
+| **Apply Stateful file and see the creations**    | **See the bounding**          |
+|--------------------------------|------------------------------------|
+| ![VS]() | ![AWS]() | 
 
 
 
 
+- When data is written on the master, all the data gets stored on the node’s volume.
+  
+<p align="center">
+  <img src="" width="500" alt="Initialize Repository Screenshot">
+</p>
 
 
 
 
-
+- Delete all services,files,volumes
+  
+<p align="center">
+  <img src="" width="500" alt="Initialize Repository Screenshot">
+</p>
 
 
 
@@ -4103,7 +4312,40 @@ It uses a DaemonSet for log collection:<br>
 - Logs from all pods on that node are collected
 - New node → logs start automatically
 
+---
 
+##  Script's
+
+`demonset.yml`
+
+```yaml
+apiVersion: apps/v1                     # API version for DaemonSet resource
+kind: DaemonSet                        # Resource type is DaemonSet (runs one Pod per node)
+
+metadata:                              # Metadata of the DaemonSet
+  name: nginx-daemon                   # Name of the DaemonSet
+
+spec:                                  # Specification of the DaemonSet
+  selector:                            # Selector to identify Pods managed by this DaemonSet
+    matchLabels:                       # Matching labels
+      app: nginx-daemon                # Pods with label app=nginx-daemon are selected
+
+  template:                            # Pod template used by the DaemonSet
+    metadata:                          # Metadata for the Pod
+      labels:                          # Labels applied to the Pod
+        app: nginx-daemon              # Label used by selector to manage Pods
+
+    spec:                              # Pod specification
+      nodeSelector:                    # Restricts Pods to specific nodes
+        kubernetes.io/hostname: node   # Pod will run only on the node named "node"
+
+      containers:                      # List of containers in the Pod
+        - name: nginx                  # Name of the container
+          image: nginx:latest          # Nginx container image (latest version)
+
+          ports:                       # Ports exposed by the container
+            - containerPort: 80        # Container listens on port 80
+```
 
 
 
@@ -4346,15 +4588,6 @@ User → Ingress / LoadBalancer → Service → Pod
 
 
 ---
-
-
-
-
-
-
-
-
-
 
 
 
