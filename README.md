@@ -4347,6 +4347,29 @@ spec:                                  # Specification of the DaemonSet
             - containerPort: 80        # Container listens on port 80
 ```
 
+---
+
+##  Screenshot's
+
+###  📌 DaemonSet Practical – Pod Auto-Recreation Verification
+
+- Verified that no Pods were running in the default namespace.
+- Created a DaemonSet configuration file.
+- Applied the DaemonSet to the cluster.
+- DaemonSet automatically created a Pod on the target node.
+- Confirmed Pod status as Running.
+- Manually deleted the DaemonSet Pod.
+- Kubernetes immediately recreated the Pod automatically.
+- Verified new Pod name, confirming recreation behavior.
+- Checked DaemonSet status to confirm desired and running Pod count.
+- This proves Pods managed by DaemonSet are self-healing.
+- DaemonSet ensures required Pods always run on specified nodes.
+
+
+<p align="center">
+  <img src="" width="500" alt="Initialize Repository Screenshot">
+</p>
+
 
 
 ---
@@ -4592,6 +4615,31 @@ User → Ingress / LoadBalancer → Service → Pod
 
 
 
+##  Screenshot's
+
+
+###  📌 Kubernetes Networking Practical – Cluster & Pod Network Verification
+
+- Verified Kubernetes cluster nodes and their readiness status.
+- Identified **control-plane** (**master**) and worker node roles.
+- Checked node labels, taints, and scheduling behavior.
+- Confirmed Pod networking ranges (***PodCIDR***) assigned to each node.
+- Verified that each node has a unique Pod subnet.
+- Observed Flannel CNI annotations on both nodes.
+- Confirmed Flannel networking is running and healthy.
+- Verified node internal IPs used for cluster communication.
+- Created a Pod and verified it was scheduled on the worker node.
+- Checked Pod IP address assigned from the node’s PodCIDR range.
+- Confirmed Pod-to-node IP mapping using `kubectl get pod -o wide`.
+- Verified system Pods running in the `kube-system` namespace.
+- Observed CoreDNS Pods enabling service discovery inside the cluster.
+- Verified kube-proxy running on both master and worker nodes.
+- Confirmed etcd running on the control-plane node.
+- Verified etcd uses host-mounted storage for persistent cluster data.
+- Checked CNI configuration files under `/etc/cni/net.d`.
+- Confirmed Flannel CNI configuration is active.
+- This proves cluster networking is configured using a CNI plugin.
+- Pods communicate using an overlay network across nodes.
 
 
 
@@ -4604,9 +4652,107 @@ User → Ingress / LoadBalancer → Service → Pod
 
 
 
+---
+
+##  Script's
+
+`multiconatiner.yml`
+
+```yaml
+apiVersion: v1                         # API version for core Kubernetes resources
+kind: Pod                              # Resource type is Pod (smallest deployable unit)
+
+metadata:                              # Metadata of the Pod
+  name: multi-nginx                    # Name of the Pod
+  labels:                              # Labels attached to the Pod
+    app: multi-nginx                   # Label used for identification or Service selection
+
+spec:                                  # Specification of the Pod
+  containers:                          # List of containers running inside the Pod
+
+    - name: nginx-80                   # Name of the first container
+      image: nginx:latest              # Nginx container image
+      ports:                           # Ports exposed by this container
+        - containerPort: 80            # This container listens on port 80
+
+    - name: nginx-81                   # Name of the second container
+      image: nginx:latest              # Nginx container image
+      ports:                           # Ports exposed by this container
+        - containerPort: 81            # This container listens on port 81
+
+      command: ["sh", "-c"]             # Run shell command inside the container
+      args:                             # Arguments passed to the shell
+        - |                             # Multi-line shell script
+          sed -i 's/listen       80;/listen       81;/' /etc/nginx/conf.d/default.conf  # Change Nginx listen port from 80 to 81
+          nginx -g 'daemon off;'        # Start Nginx in foreground to keep container running
+```
+
+`Multiconatinersvc.yml`
+
+```yaml
+apiVersion: v1                          # API version for core Kubernetes resources
+kind: Service                           # Resource type is Service (used to expose Pods)
+
+metadata:                               # Metadata information of the Service
+  name: multi-nginx-svc                 # Name of the Service
+
+spec:                                   # Specification of the Service
+  type: NodePort                        # Service type is NodePort (exposes service on each node IP)
+
+  selector:                             # Label selector to choose target Pods
+    app: multi-nginx                    # Service will route traffic to Pods with label app=multi-nginx
+
+  ports:                                # Port mappings for the Service
+
+    - name: web80                       # Logical name for port 80 service
+      port: 80                          # Service port inside the cluster
+      targetPort: 80                    # Target container port (nginx-80)
+      nodePort: 30080                  # External port on the node to access port 80
+
+    - name: web81                       # Logical name for port 81 service
+      port: 81                          # Service port inside the cluster
+      targetPort: 81                    # Target container port (nginx-81)
+      nodePort: 30081                  # External port on the node to access port 81
+```
+
+
+- Now we are going to look at how to create multiple containers inside a single Pod and how to access the application in a web browser after creating it.
+
+
+###  📌 Multi-Container Pod Practical – Accessing Multiple Containers via Browser
+
+
+- Deleted all existing resources to start with a clean environment.
+- Created a Pod with multiple containers inside a single Pod definition.
+- Each container runs an Nginx web server on a different port.
+- Successfully deployed the multi-container Pod.
+- Verified Pod status showing 2/2 containers running.
+- Executed into the Pod using `kubectl exec`.
+- Accessed the first container using:
+  - `curl http://localhost` (default port 80)
+- Accessed the second container using:
+  - `curl http://localhost:81`
+- Both containers returned the Nginx welcome page, confirming they are running correctly.
+- Created a NodePort Service to expose both container ports.
+- Mapped container ports to NodePort ports:
+  - Port 80 → NodePort 30080
+  - Port 81 → NodePort 30081
+- Verified Service creation and port mapping using `kubectl get all`.
+
+---
+
+###  🌐 Browser Access Verification
+
+- Accessed first container in browser using:
+  - `http://<Node-IP>:30080`
+- Accessed second container in browser using:
+  - `http://<Node-IP>:30081`
+- Both URLs successfully displayed the Nginx welcome page.
+- This confirms multiple containers inside a single Pod can be accessed externally via different ports.
 
 
 
 
+---
 
 
