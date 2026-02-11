@@ -4645,17 +4645,17 @@ User → Ingress / LoadBalancer → Service → Pod
 
 | **Terimanal**    | ****          |
 |--------------------------------|------------------------------------|
-| ![VS]() | ![AWS]() |
+| ![VS](https://github.com/nikiimisal/Concepts_And_Examples-of-K8S/blob/main/img/555555555555555555/Screenshot%202026-02-11%20091209.png?raw=true) | ![AWS](https://github.com/nikiimisal/Concepts_And_Examples-of-K8S/blob/main/img/555555555555555555/Screenshot%202026-02-11%20091318.png?raw=true) |
 
 
 
 | **Terimanal**    | ****          |
 |--------------------------------|------------------------------------|
-| ![VS]() | ![AWS]() |
+| ![VS](https://github.com/nikiimisal/Concepts_And_Examples-of-K8S/blob/main/img/555555555555555555/Screenshot%202026-02-11%20091412.png?raw=true) | ![AWS](https://github.com/nikiimisal/Concepts_And_Examples-of-K8S/blob/main/img/555555555555555555/Screenshot%202026-02-11%20091541.png?raw=true) |
 
 
 <p align="center">
-  <img src="" width="500" alt="Initialize Repository Screenshot">
+  <img src="https://github.com/nikiimisal/Concepts_And_Examples-of-K8S/blob/main/img/555555555555555555/Screenshot%202026-02-11%20091552.png?raw=true" width="500" alt="Initialize Repository Screenshot">
 </p>
 
 
@@ -4764,12 +4764,22 @@ spec:                                   # Specification of the Service
 
 | **Browser**    | ****          |
 |--------------------------------|------------------------------------|
-| ![VS]() | ![AWS]() |
+| ![VS](https://github.com/nikiimisal/Concepts_And_Examples-of-K8S/blob/main/img/555555555555555555/Screenshot%202026-02-11%20094506.png?raw=true) | ![AWS](https://github.com/nikiimisal/Concepts_And_Examples-of-K8S/blob/main/img/555555555555555555/Screenshot%202026-02-11%20094531.png?raw=true) |
 
 <p align="center">
-  <img src="" width="500" alt="Initialize Repository Screenshot">
+  <img src="https://github.com/nikiimisal/Concepts_And_Examples-of-K8S/blob/main/img/555555555555555555/Screenshot%202026-02-11%20094541.png?raw=true" width="500" alt="Initialize Repository Screenshot">
 </p>
 
 | **Browser**    | ****          |
 |--------------------------------|------------------------------------|
-| ![VS]() | ![AWS]() |
+| ![VS](https://github.com/nikiimisal/Concepts_And_Examples-of-K8S/blob/main/img/555555555555555555/Screenshot%202026-02-11%20093554.png?raw=true) | ![AWS](https://github.com/nikiimisal/Concepts_And_Examples-of-K8S/blob/main/img/555555555555555555/Screenshot%202026-02-11%20093605.png?raw=true) |
+
+
+
+
+
+
+
+
+
+
