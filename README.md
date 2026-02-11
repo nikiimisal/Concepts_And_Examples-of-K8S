@@ -4367,7 +4367,7 @@ spec:                                  # Specification of the DaemonSet
 
 
 <p align="center">
-  <img src="" width="500" alt="Initialize Repository Screenshot">
+  <img src="https://github.com/nikiimisal/Concepts_And_Examples-of-K8S/blob/main/img/555555555555555555/Screenshot%202026-02-11%20084854.png?raw=true" width="500" alt="Initialize Repository Screenshot">
 </p>
 
 
@@ -4643,13 +4643,20 @@ User → Ingress / LoadBalancer → Service → Pod
 
 
 
+| **Terimanal**    | ****          |
+|--------------------------------|------------------------------------|
+| ![VS]() | ![AWS]() |
 
 
 
+| **Terimanal**    | ****          |
+|--------------------------------|------------------------------------|
+| ![VS]() | ![AWS]() |
 
 
-
-
+<p align="center">
+  <img src="" width="500" alt="Initialize Repository Screenshot">
+</p>
 
 
 ---
@@ -4755,4 +4762,14 @@ spec:                                   # Specification of the Service
 
 ---
 
+| **Browser**    | ****          |
+|--------------------------------|------------------------------------|
+| ![VS]() | ![AWS]() |
 
+<p align="center">
+  <img src="" width="500" alt="Initialize Repository Screenshot">
+</p>
+
+| **Browser**    | ****          |
+|--------------------------------|------------------------------------|
+| ![VS]() | ![AWS]() |
